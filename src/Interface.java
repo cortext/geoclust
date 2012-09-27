@@ -19,6 +19,8 @@ public class Interface extends JFrame
 	JPanel pan = new JPanel();
 	JPanel pan1 = new JPanel();
 	
+	public long temp_ini;
+	
 	JButton bouton2 = new JButton("Classifier");
 
 	JLabel label0 = new JLabel("Tables de la base de données");
@@ -168,12 +170,22 @@ public class Interface extends JFrame
 	    	con = new ConnexionBD(ui);
 	    	try 
 	    	{
+	    		temp_ini=System.currentTimeMillis();
 				ExtractionDonnees exd = new ExtractionDonnees(ui, con);
 				
 				DBScan dbs = new DBScan(exd);
 				FiltresChameleon fc = new FiltresChameleon(dbs);
 				EcritureResultats er = new EcritureResultats(dbs);
-				EcritureRIRC rirc= new EcritureRIRC(fc); 				
+				EcritureRIRC rirc= new EcritureRIRC(fc); 
+				
+				long temp_final=System.currentTimeMillis()-temp_ini;
+				
+				long heure = temp_final/3600000;
+				long manque_heure = temp_final%3600000;
+				long minute = manque_heure/60000;
+				long manque_minute = manque_heure%60000;
+				long seg = manque_minute/1000;
+				System.out.println("tiempo que tarda heure:minutes:seg -> "+heure+" h:"+minute+" m:"+seg+" s");
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

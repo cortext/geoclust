@@ -1,4 +1,3 @@
-import java.util.Collections;
 import java.util.Vector;
 
 public class FiltresChameleon 
@@ -84,7 +83,7 @@ public class FiltresChameleon
 		System.out.println("RC = "+RC);
 //		System.out.println("CPubPat = "+CPubPat);
 //		System.out.println("IDpôles = "+IDpbc);
-		System.out.println("Nombre de fusions de clusters : "+(nbfusions/2));	
+		System.out.println("Nombre de fusions de clusters : "+(nbfusions/2));
 	}
 	
 	void Fusionne(Integer i, Integer j)
@@ -164,8 +163,8 @@ public class FiltresChameleon
 //		System.out.println("Clusters = "+Clusters);		
 //		System.out.println("numéros des clusters = "+num);
 //		System.out.println("MNumClust = "+dbs.MNumClust);
-		
-		for(int i=0; i<Clusters.size(); i++)
+		int cluster_visite=1;
+		for(int i=0; i<Clusters.size()-1; i++)
 		{
 //			int nbPubPat1 = 0;
 //			for(int k=1; k<Clusters.get(i).size(); k++)//on comptabilise le nb de publications au sein d'un même cluster
@@ -179,7 +178,7 @@ public class FiltresChameleon
 			//Se realiza por fuera porque con el mismo se va a tener siempre
 			ncInterne1pub = NbCollaboration(i,i);
 			
-			for(int j = 0; j<Clusters.size(); j++)
+			for(int j = cluster_visite; j<Clusters.size(); j++)
 			{
 				//TODO AQUI ESTA EL ERROR cambiar para que no se calcule entre ellos mismos
 				if(i!=j){
@@ -235,6 +234,7 @@ public class FiltresChameleon
 					//calcul de RC
 				}
 			}
+			cluster_visite++;
 		}// on compare les RI et RC des clusters. Si ces valeurs sont très élevées, on fusionne les clusters. Sinon, on les laisse tels quels.
 //		System.out.println("Clusters = "+Clusters);
 //		System.out.println("ClustersID = "+ClustersID);
