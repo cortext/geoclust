@@ -120,7 +120,7 @@ public class DBScan
 	    System.out.println("Fin DBScan");
 	}
 	
-	double DistancePts(double lambdai,double phii,double lambdaj,double phij)
+	public double DistancePts(double lambdai,double phii,double lambdaj,double phij)
 	{
 		double a = 6378137.0; //en m
 		double b = 6356752.314; // en m

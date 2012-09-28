@@ -4,6 +4,7 @@ public class FiltresChameleon
 {
 	public DBScan dbs;
 	public Vector<Vector<Object>> Clusters = new Vector<Vector<Object>>();
+	public Vector<Vector<Double>> ClustersCoords = new Vector<Vector<Double>>();
 	public Vector<Vector<Object>> ClustersID = new Vector<Vector<Object>>();
 	public Vector<Vector<Double>> RI = new Vector<Vector<Double>>();
 	public Vector<Vector<Double>> RC = new Vector<Vector<Double>>();
@@ -116,6 +117,9 @@ public class FiltresChameleon
 							present=true;
 							Clusters.get(k).add((int) IDpbc.get(i).get(0));
 							ClustersID.get(k).add((int) IDpbc.get(i).get(1));
+							ClustersCoords.get(k).add((double) IDpbc.get(i).get(1));
+							ClustersCoords.get(k).add((double) dbs.exd.Coord.get(i).get(1));
+							ClustersCoords.get(k).add((double) dbs.exd.Coord.get(i).get(2));
 							break;//sors de k
 						}
 					}
@@ -130,6 +134,12 @@ public class FiltresChameleon
 						ClustersID.add(new Vector<Object>());
 						ClustersID.get(nb).add(dbs.MNumClust.get(i));
 						ClustersID.get(nb).add((int) IDpbc.get(i).get(1));
+						
+						ClustersCoords.add(new Vector<Double>());
+						ClustersCoords.get(nb).add((double)dbs.MNumClust.get(i));
+						ClustersCoords.get(nb).add((double) IDpbc.get(i).get(1));
+						ClustersCoords.get(nb).add((double) dbs.exd.Coord.get(i).get(1));
+						ClustersCoords.get(nb).add((double) dbs.exd.Coord.get(i).get(2));
 						
 						nb++;
 					}
@@ -146,6 +156,12 @@ public class FiltresChameleon
 					ClustersID.get(nb).add(dbs.MNumClust.get(i));
 					ClustersID.get(nb).add((int) IDpbc.get(i).get(1));//que pour requête sur publications pour le moment
 					
+					ClustersCoords.add(new Vector<Double>());
+					ClustersCoords.get(nb).add((double)dbs.MNumClust.get(i));
+					ClustersCoords.get(nb).add((double) IDpbc.get(i).get(1));
+					ClustersCoords.get(nb).add((double) dbs.exd.Coord.get(i).get(1));
+					ClustersCoords.get(nb).add((double) dbs.exd.Coord.get(i).get(2));
+					
 					nb++;
 				}
 			}else
@@ -159,6 +175,7 @@ public class FiltresChameleon
 //		{
 //			System.out.print(Clusters.get(i).get(0)+ "; ");
 //		}
+		Vector<Vector<Double>> Coord_Moyenne=CoordMoyenneParCluster(ClustersCoords);
 		System.out.println("Fin composition des clusters");
 //		System.out.println("Clusters = "+Clusters);		
 //		System.out.println("numéros des clusters = "+num);
@@ -180,9 +197,9 @@ public class FiltresChameleon
 			
 			for(int j = cluster_visite; j<Clusters.size(); j++)
 			{
+				double distance=dbs.DistancePts(Coord_Moyenne.get(i).get(1), Coord_Moyenne.get(i).get(2), Coord_Moyenne.get(j).get(1), Coord_Moyenne.get(i).get(2))/1000;
 				//TODO AQUI ESTA EL ERROR cambiar para que no se calcule entre ellos mismos
-				if(i!=j){
-					
+				if(i!=j && distance<150){
 					double ncInterne2pub =NbCollaboration(j,j);
 					double ncpub=NbCollaboration(i,j);
 					
@@ -284,6 +301,37 @@ public class FiltresChameleon
 			}
 		}// on compte le nombre de publications/brevets nés de collaborations entre les pôles du cluster i et ceux du cluster j.
 		return nb; 
+	}
+	
+	/**
+	 * Methode pour faire le calcul du centroide pour chaque cluster
+	 * @author Michel Revollo
+	 * 
+	 * @param ClustersCoords coord de points
+	 * 
+	 * @return indice de cluster avec x,y centroides
+	 */
+	public Vector<Vector<Double>> CoordMoyenneParCluster(Vector<Vector<Double>> Coords){
+		Vector<Vector<Double>> ClusterCentroid = new Vector<Vector<Double>>();
+		for(int i=0;i<Coords.size();i++){
+			double x_moyenne=0.0;
+			double y_moyenne=0.0;
+			int cont=0;
+			int size=Coords.get(i).size();
+			for (int j = 2; j < size; j=j+3) {//comienza en uno porque la posicion 0 indica el numero de cluster
+				x_moyenne+=(Coords.get(i).get(j));
+				y_moyenne+=Coords.get(i).get(j+1);
+				cont++;//CoordPoint.
+			}
+			x_moyenne=x_moyenne/cont;
+			y_moyenne=y_moyenne/cont;
+			ClusterCentroid.add(new Vector<Double>());
+			ClusterCentroid.get(i).add(Coords.get(i).get(0));
+			ClusterCentroid.get(i).add(x_moyenne);
+			ClusterCentroid.get(i).add(y_moyenne);
+			
+		}
+		return ClusterCentroid;
 	}
 
 
