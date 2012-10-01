@@ -25,7 +25,7 @@ public class EcritureResultats {
     	fichierSortie.println("Id_couple;Numéro de cluster"+"Requête : ;Nb minimal de poits = "+dbs.exd.ui.tnbpts.getText()+";Rayon = " +dbs.exd.ui.tray.getText()+" m;Année début = "+dbs.exd.ui.deb.getText()+";Année fin = "+dbs.exd.ui.fin.getText());
     	for(int i = 0; i<dbs.v1; i++)
     	{
-    		fichierSortie.println(dbs.exd.Coord.get(i).get(0).toString()+";"+dbs.MNumClust.get(i).toString());
+    		fichierSortie.println((int)(double)dbs.exd.Coord.get(i).get(0)+";"+dbs.MNumClust.get(i).toString());
     	}
 		fichierSortie.close();
 		System.out.println("Fin écriture DBScan");

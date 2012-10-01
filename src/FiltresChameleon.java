@@ -24,33 +24,46 @@ public class FiltresChameleon
 		System.out.println("Début filtres chameleon");
 
 		CPubPat = ClassePubPat();
-		
+		double ri_rc_parametres=Double.valueOf(dbs.exd.ui.tseuil1.getText())*Math.pow(Double.valueOf(dbs.exd.ui.tseuil2.getText()),1.5);
+		double ri_parametres=Double.valueOf(dbs.exd.ui.tseuil1.getText());
+	    double rc_parametres=Double.valueOf(dbs.exd.ui.tseuil2.getText());
 		int nbfusions = 0;
 		for(int iter=0; iter<Integer.valueOf(dbs.exd.ui.titer.getText()); iter++)
 		{
 			Filtres(dbs);
 			for(int i=0; i<RI.size();i++)
 			{
+				double ri_rc=0.0;
+				double ri=0.0;
+				double rc=0.0;
 				//TODO le text dit que ne est pas un OR sinon un AND  
-				if(Clusters.size()>1&& (((Double) RI.get(i).get(2)> Double.valueOf(dbs.exd.ui.tseuil1.getText()))&& ((Double) RC.get(i).get(2)>Double.valueOf(dbs.exd.ui.tseuil2.getText()))))
-	//			if(Clusters.size()>1&&((RI.get(i).get(2)> 0.2)))//|| ((Double) RC.get(i).get(2)>0.6)))
+				if(Clusters.size()>1)
 				{
-					
-					Integer a =Integer.valueOf(RI.get(i).get(0).toString().substring(0,RI.get(i).get(0).toString().length()-2));
-	//				System.out.println(a-1);
-					Integer b = Integer.valueOf(RI.get(i).get(1).toString().substring(0,RI.get(i).get(1).toString().length()-2));
-					//TODO 
-					if(a!=b){
-					Fusionne(a,b);
-					nbfusions++;
+					//si on a choisi le faire pour la formule ri*rc^alpha 
+					if(dbs.exd.ui.ri_pour_rc){
+						ri_rc=(Double)RI.get(i).get(2)*(Math.pow((Double) RC.get(i).get(2),1.5));
 					}
 					else{
-						continue;
+						ri=(double) RI.get(i).get(2);
+					    rc=(double) RC.get(i).get(2);
 					}
-	//				System.out.println("Fusion !");
+					if((ri_rc!=0.0 && ri_rc>ri_rc_parametres)||(ri!=0.0 && rc!=0.0 && ri>ri_parametres && rc>rc_parametres)){
+						
+						Integer a =Integer.valueOf(RI.get(i).get(0).toString().substring(0,RI.get(i).get(0).toString().length()-2));
+						Integer b = Integer.valueOf(RI.get(i).get(1).toString().substring(0,RI.get(i).get(1).toString().length()-2));
+						//TODO 
+						if(a!=b){
+						Fusionne(a,b);
+						nbfusions++;
+						}
+						else{
+							continue;
+						}
+					
+					}
 				}
 			}
-			
+			/*
 			if(dbs.exd.ui.brevpat == 3)
 			{
 				PubPat = (Vector<Vector<Integer>>) dbs.exd.Pat;
@@ -75,6 +88,7 @@ public class FiltresChameleon
 					}
 				}	
 			}
+			*/
 			System.out.println("nb fusions ap l'itération numéro "+(iter+1)+" : " + nbfusions);
 		}
 		//TODO enlever Filtres(dbs) ;
@@ -84,7 +98,7 @@ public class FiltresChameleon
 		System.out.println("RC = "+RC);
 //		System.out.println("CPubPat = "+CPubPat);
 //		System.out.println("IDpôles = "+IDpbc);
-		System.out.println("Nombre de fusions de clusters : "+(nbfusions/2));
+		System.out.println("Nombre de fusions de clusters : "+(nbfusions));
 	}
 	
 	void Fusionne(Integer i, Integer j)

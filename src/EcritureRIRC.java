@@ -11,8 +11,7 @@ public class EcritureRIRC {
 		FileWriter fwe = null;
 		try 
 		{
-//			fwe = new FileWriter ("ResultatsClustering.csv");
-			fwe = new FileWriter ("RI_RC.csv");
+			fwe = new FileWriter (fc.dbs.exd.ui.jtfint4.getText());
 			
 		} catch (IOException e1) 
 		{
@@ -22,21 +21,23 @@ public class EcritureRIRC {
 		BufferedWriter bwe = new BufferedWriter (fwe);
     	PrintWriter fichierSortie = new PrintWriter (bwe);
     	
-    	fichierSortie.println("ID Cluster1;ID Cluster2;RI;RC;Fusion");
-    	Double valeurRI_seuil=Double.valueOf(fc.dbs.exd.ui.tseuil1.getText());
-    	Double valeurRC_seuil=Double.valueOf(fc.dbs.exd.ui.tseuil2.getText());
+    	fichierSortie.println("ID Cluster1;ID Cluster2;RI;RC;RI*RC^1.5;Fusion");
+    	double valeurRI_seuil=Double.valueOf(fc.dbs.exd.ui.tseuil1.getText());
+    	double valeurRC_seuil=Double.valueOf(fc.dbs.exd.ui.tseuil2.getText());
+    	double valeurRI_pour_RC_ini=valeurRI_seuil*Math.pow(valeurRC_seuil, 1.5);
     	for(int i = 0; i<fc.RI.size(); i++)
     	{
-    		Double cluster1=fc.RI.get(i).get(0);
-    		Double cluster2=fc.RI.get(i).get(1);
-    		Double ri=fc.RI.get(i).get(2);
-    		Double rc=fc.RC.get(i).get(2);
+    		int cluster1=(int)(double)fc.RI.get(i).get(0);
+    		int cluster2=(int)(double)fc.RI.get(i).get(1);
+    		double ri=fc.RI.get(i).get(2);
+    		double rc=fc.RC.get(i).get(2);
+    		double ri_rc=ri*Math.pow(rc,1.5); 
     		
-    		if(ri>valeurRI_seuil && rc>valeurRC_seuil){
-    			fichierSortie.println(cluster1+";"+cluster2+";"+ri+";"+rc+";Y");
+    		if((ri>valeurRI_seuil && rc>valeurRC_seuil) || (fc.dbs.exd.ui.checkbtn1.isSelected() && ri_rc> valeurRI_pour_RC_ini)){
+    			fichierSortie.println(cluster1+";"+cluster2+";"+ri+";"+rc+";"+ri_rc+";Y");
     		}
     		else{
-    			fichierSortie.println(cluster1+";"+cluster2+";"+ri+";"+rc+";N");
+    			fichierSortie.println(cluster1+";"+cluster2+";"+ri+";"+rc+";"+ri_rc+";N");
     		}
     	}
     	

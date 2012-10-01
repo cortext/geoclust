@@ -16,6 +16,7 @@ public class Interface extends JFrame
 	public int adeb;
 	public int afin;
 	public int brevpat;
+	public boolean ri_pour_rc;
 	JPanel pan = new JPanel();
 	JPanel pan1 = new JPanel();
 	
@@ -28,7 +29,8 @@ public class Interface extends JFrame
 	public JLabel brevet = new JLabel("Table des brevets");
 	public JLabel publication = new JLabel("Table des publications");
 	public JLabel coord= new JLabel("Table des coordonnées et identifiants");
-	public JLabel output = new JLabel("Nom du fichier de sortie");
+	public JLabel output = new JLabel("Nom du fichier de sortie Clusters");
+	public JLabel output2 = new JLabel("Nom du fichier de sortie RI_RC");
 	public JLabel tdeb = new JLabel("Année début");
 	public JLabel tfin = new JLabel("Année fin (inclue)");
 	public JLabel nbpts = new JLabel("Nb minimal de points dans 1 cluster");
@@ -43,6 +45,7 @@ public class Interface extends JFrame
     JRadioButton jr3 = new JRadioButton("Brevets et Publications");
     JRadioButton jr4 = new JRadioButton("Brevets");
     JRadioButton jr5 = new JRadioButton("Publications");
+    JCheckBox checkbtn1 = new JCheckBox("Formule (RI*RC^1.5)");
     JRadioButton defaut = new JRadioButton("Defaut");
     JRadioButton param = new JRadioButton("Parametrable");
     
@@ -54,6 +57,7 @@ public class Interface extends JFrame
     JFormattedTextField pub = new JFormattedTextField();
     JFormattedTextField brev = new JFormattedTextField();
     JFormattedTextField jtfint3 = new JFormattedTextField();
+    JFormattedTextField jtfint4 = new JFormattedTextField();
     JTextField fin = new JTextField();
     JTextField deb = new JTextField();
     public JTextField tnbpts = new JTextField();
@@ -70,7 +74,7 @@ public class Interface extends JFrame
 		
 		ui = this;
 		this.setTitle("Logiciel de Clustering");
-        this.setSize(800, 400);
+        this.setSize(800, 480);
         this.setLocationRelativeTo(null);
 //        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -80,6 +84,7 @@ public class Interface extends JFrame
         jr3.addActionListener(new RadioStateListener());
         jr4.addActionListener(new RadioStateListener());
         jr5.addActionListener(new RadioStateListener());
+        checkbtn1.addActionListener(new CheckBoxListener());
         defaut.addActionListener(new RadioDef());
         param.addActionListener(new RadioDef());
         
@@ -95,6 +100,9 @@ public class Interface extends JFrame
         jtfint3.setFont(f1);
         jtfint3.setSize(100, 30);
         jtfint3.setForeground(Color.BLUE);
+        jtfint4.setFont(f1);
+        jtfint4.setSize(100, 30);
+        jtfint4.setForeground(Color.BLUE);
         fin.setFont(f1);
         deb.setFont(f1);
         tray.setFont(f1);
@@ -136,23 +144,27 @@ public class Interface extends JFrame
         jr3.setBackground(col);
         jr4.setBackground(col);
         jr5.setBackground(col);
+        checkbtn1.setBackground(col);
+        
         defaut.setBackground(Color.getHSBColor(10, 10, 50));
         param.setBackground(Color.getHSBColor(10, 10, 50));
                 
-        GridLayout gl1 = new GridLayout (11, 3, 40, 15);       
+        GridLayout gl1 = new GridLayout (13, 3, 40, 15);       
         
         pan1.setLayout(gl1);
-        pan1.add(defaut);      		pan1.add(param);      		pan1.add(new JLabel(""));
+        pan1.add(defaut);      		pan1.add(param);      		pan1.add(checkbtn1);
         pan1.add(label0);			pan1.add(label1);			pan1.add(seuil1);
         pan1.add(brevet);			pan1.add(tdeb);				pan1.add(tseuil1);
         pan1.add(brev);				pan1.add(deb);				pan1.add(seuil2);
         pan1.add(publication);		pan1.add(tfin);				pan1.add(tseuil2);
         pan1.add(pub);				pan1.add(fin);				pan1.add(output);
         pan1.add(coord);			pan1.add(nbpts);			pan1.add(jtfint3);
-        pan1.add(tcoord);			pan1.add(tnbpts);			pan1.add(jr4);
-        pan1.add(new JLabel(""));	pan1.add(ray);				pan1.add(jr5);
-        pan1.add(iter);				pan1.add(tray);				pan1.add(jr3);
-        pan1.add(titer);			pan1.add(new JLabel(""));	pan1.add(bouton2);
+        pan1.add(tcoord);          	pan1.add(tnbpts);			pan1.add(output2);
+        pan1.add(iter);         	pan1.add(ray);				pan1.add(jtfint4);
+        pan1.add(titer);			pan1.add(tray);	        	pan1.add(jr4);
+        pan1.add(new JLabel(""));	pan1.add(new JLabel(""));	pan1.add(jr5);
+        pan1.add(new JLabel(""));	pan1.add(new JLabel(""));	pan1.add(jr3);
+        pan1.add(new JLabel(""));	pan1.add(new JLabel(""));	pan1.add(bouton2);
         
         this.setContentPane(pan1);
         this.setVisible(true);
@@ -192,7 +204,6 @@ public class Interface extends JFrame
 			}
 	    }
 	}
-	
 
 	class RadioStateListener implements ActionListener
 	{	 
@@ -200,6 +211,16 @@ public class Interface extends JFrame
         {
         	if(jr4.isSelected()){brevpat = 0;}//brevets selectionnés
         	else{if(jr5.isSelected()){brevpat = 1;}else{brevpat = 3;}}
+        }
+        
+	}
+	
+	class CheckBoxListener implements ActionListener
+	{	 
+        public void actionPerformed(ActionEvent e) 
+        {
+        	if(checkbtn1.isSelected()){ri_pour_rc=true;}
+        	else{ri_pour_rc=false;}
         }
         
 	}
@@ -214,6 +235,7 @@ public class Interface extends JFrame
         		pub.setText("a01_06_pub_idp_idc");
         		brev.setText("a01_04_pat_idb_idc");
         		jtfint3.setText("ResultatsClustering.csv");
+        		jtfint4.setText("RI_RC.csv");
         		deb.setText("1980");
         		fin.setText("2010");
         		tnbpts.setText("5");
