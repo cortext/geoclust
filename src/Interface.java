@@ -219,8 +219,20 @@ public class Interface extends JFrame
 	{	 
         public void actionPerformed(ActionEvent e) 
         {
-        	if(checkbtn1.isSelected()){ri_pour_rc=true;}
-        	else{ri_pour_rc=false;}
+        	if(checkbtn1.isSelected()){
+        		ri_pour_rc=true; 
+        		seuil1.setText("Total RI*RC^1.5");
+        		tseuil1.setText("100");
+        		seuil2.setVisible(false);
+        		tseuil2.setVisible(false);
+    		}
+        	else{
+        		ri_pour_rc=false;
+        		seuil1.setText("Seuil RI");
+        		tseuil1.setText("0.75");
+        		seuil2.setVisible(true);
+        		tseuil2.setVisible(true);
+    		}
         }
         
 	}

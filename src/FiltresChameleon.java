@@ -1,13 +1,18 @@
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.Vector;
 
-public class FiltresChameleon 
+public class FiltresChameleon
 {
 	public DBScan dbs;
 	public Vector<Vector<Object>> Clusters = new Vector<Vector<Object>>();
 	public Vector<Vector<Double>> ClustersCoords = new Vector<Vector<Double>>();
 	public Vector<Vector<Object>> ClustersID = new Vector<Vector<Object>>();
 	public Vector<Vector<Double>> RI = new Vector<Vector<Double>>();
-	public Vector<Vector<Double>> RC = new Vector<Vector<Double>>();
+	public boolean formuleIsSelected=false;
 //	public Vector<Vector<Integer>> NbPubPat = new Vector<Vector<Integer>>();
 	Vector<Vector<Integer>> CPubPat;
 	public Vector<Vector<Integer>> IDpbc ;
@@ -17,6 +22,7 @@ public class FiltresChameleon
 	FiltresChameleon(DBScan dbscan)
 	{
 		dbs = dbscan;
+		formuleIsSelected=dbs.exd.ui.checkbtn1.isSelected();
 		
 		if(dbs.exd.ui.brevpat == 1||dbs.exd.ui.brevpat == 3){PubPat = dbs.exd.Pub; IDpbc =dbs.exd.IDpc;}//publications sélectionnées
 		else{PubPat = (Vector<Vector<Integer>>) dbs.exd.Pat; IDpbc = dbs.exd.IDbc;}
@@ -24,9 +30,18 @@ public class FiltresChameleon
 		System.out.println("Début filtres chameleon");
 
 		CPubPat = ClassePubPat();
-		double ri_rc_parametres=Double.valueOf(dbs.exd.ui.tseuil1.getText())*Math.pow(Double.valueOf(dbs.exd.ui.tseuil2.getText()),1.5);
-		double ri_parametres=Double.valueOf(dbs.exd.ui.tseuil1.getText());
-	    double rc_parametres=Double.valueOf(dbs.exd.ui.tseuil2.getText());
+		//double ri_rc_parametres=Double.valueOf(dbs.exd.ui.tseuil1.getText())*Math.pow(Double.valueOf(dbs.exd.ui.tseuil2.getText()),1.5);
+		double ri_rc_parametres=0.0;
+		double ri_parametres=0.0;
+		double rc_parametres=0.0;
+		
+		if(formuleIsSelected){
+			ri_rc_parametres=Double.valueOf(dbs.exd.ui.tseuil1.getText());
+		}
+		else{
+			ri_parametres=Double.valueOf(dbs.exd.ui.tseuil1.getText());
+			rc_parametres=Double.valueOf(dbs.exd.ui.tseuil2.getText());
+		}
 		int nbfusions = 0;
 		for(int iter=0; iter<Integer.valueOf(dbs.exd.ui.titer.getText()); iter++)
 		{
@@ -41,13 +56,14 @@ public class FiltresChameleon
 				{
 					//si on a choisi le faire pour la formule ri*rc^alpha 
 					if(dbs.exd.ui.ri_pour_rc){
-						ri_rc=(Double)RI.get(i).get(2)*(Math.pow((Double) RC.get(i).get(2),1.5));
+						ri_rc=(Double)RI.get(i).get(2)*(Math.pow((Double) RI.get(i).get(3),1.5));
 					}
 					else{
 						ri=(double) RI.get(i).get(2);
-					    rc=(double) RC.get(i).get(2);
+					    rc=(double) RI.get(i).get(3);
 					}
-					if((ri_rc!=0.0 && ri_rc>ri_rc_parametres)||(ri!=0.0 && rc!=0.0 && ri>ri_parametres && rc>rc_parametres)){
+					if((ri_rc!=0.0 && ri_rc_parametres!=0.0 && ri_rc>ri_rc_parametres)||(ri!=0.0 && rc!=0.0 && ri>ri_parametres && rc>rc_parametres)){ 
+					//if((ri_rc!=0.0 && ri_rc>ri_rc_parametres)){if anterior
 						
 						Integer a =Integer.valueOf(RI.get(i).get(0).toString().substring(0,RI.get(i).get(0).toString().length()-2));
 						Integer b = Integer.valueOf(RI.get(i).get(1).toString().substring(0,RI.get(i).get(1).toString().length()-2));
@@ -95,7 +111,6 @@ public class FiltresChameleon
 		System.out.println("nb de clusters: " + Clusters.size());
 //		System.out.println("Nb PubPat = "+ NbPubPat);
 		System.out.println("RI = "+RI);
-		System.out.println("RC = "+RC);
 //		System.out.println("CPubPat = "+CPubPat);
 //		System.out.println("IDpôles = "+IDpbc);
 		System.out.println("Nombre de fusions de clusters : "+(nbfusions));
@@ -243,24 +258,26 @@ public class FiltresChameleon
 					double t1 = Clusters.get(i).size();
 					double t2 = Clusters.get(j).size();
 					
+					/*
 					RC.add(new Vector<Double>());
 					RC.get(RC.size()-1).add(Double.parseDouble(clust_getI));
 				    RC.get(RC.size()-1).add(Double.parseDouble(clust_getJ));
+					*/
 					
 				    //RC.get(RC.size()-1).add((double) i);
 					//RC.get(RC.size()-1).add((double) j);
-					
+					//TODO CALCULO RC EN RI
 					if((t1/(t1+t2)*ncInterne1pub/t1+t2/(t1+t2)*ncInterne2pub/t2
 							)!=0)
 					{
-						RC.get(RC.size()-1).add((double) (ncpub/(t1/(t1+t2)*ncInterne1pub/t1+t2/(t1+t2)*ncInterne2pub/t2)));
+						RI.get(RI.size()-1).add((double) (ncpub/(t1/(t1+t2)*ncInterne1pub/t1+t2/(t1+t2)*ncInterne2pub/t2)));
 					}else
 					{
 						/* TODO aqui el cambiaba los valores de RI
 						ncInterne1pub = 1;
 						ncInterne2pub = 1;
 						*/
-						RC.get(RC.size()-1).add(0.0);
+						RI.get(RI.size()-1).add(0.0);
 					}
 					//calcul de RC
 				}
@@ -269,9 +286,10 @@ public class FiltresChameleon
 		}// on compare les RI et RC des clusters. Si ces valeurs sont très élevées, on fusionne les clusters. Sinon, on les laisse tels quels.
 //		System.out.println("Clusters = "+Clusters);
 //		System.out.println("ClustersID = "+ClustersID);
-
+		System.out.println("Ri sin ordenar"+RI);
+		Collections.sort(RI, new MyComparator(3));
+		System.out.println("Ri ordenado"+RI);
 		System.out.println("Fin filtres chameleon");
-		
 	}
 
 	double NbCollaboration(int i,int j)
@@ -375,5 +393,16 @@ public class FiltresChameleon
 		System.out.println("Fin réorganisation pub");
 		return CP;// au final, CP contient, pour chaque pôle (IDC), toutes ses publications par leur IDP.
 	}
+	
+	public class MyComparator implements Comparator<Vector<Double>> {
+		  private int columnIndex = 0;
+		  public MyComparator(int columnIndex) {this.columnIndex = columnIndex;}
+
+		@Override
+		public int compare(Vector<Double> arg0, Vector<Double> arg1) {
+			// TODO Auto-generated method stub
+			return arg1.get(columnIndex).compareTo(arg0.get(columnIndex));
+		}
+	} 
 
 }
