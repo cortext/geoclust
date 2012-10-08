@@ -223,6 +223,7 @@ public class Interface extends JFrame
         		ri_pour_rc=true; 
         		seuil1.setText("Total RI*RC^1.5");
         		tseuil1.setText("100");
+        		tseuil2.setText("0");
         		seuil2.setVisible(false);
         		tseuil2.setVisible(false);
     		}
@@ -232,6 +233,7 @@ public class Interface extends JFrame
         		tseuil1.setText("0.75");
         		seuil2.setVisible(true);
         		tseuil2.setVisible(true);
+        		tseuil2.setText("10");
     		}
         }
         
