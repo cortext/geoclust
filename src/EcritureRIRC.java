@@ -43,7 +43,7 @@ public class EcritureRIRC {
     		double rc=fc.RI.get(i).get(3);
     		double ri_rc=ri*Math.pow(rc,1.5); 
     		
-    		if((ri>0.0 && rc>0.0 && ri>valeurRI_seuil && rc>valeurRC_seuil) || (fc.dbs.exd.ui.checkbtn1.isSelected() && ri_rc> valeurRI_pour_RC_ini)){
+    		if((ri>0.0 && rc>0.0 && valeurRC_seuil>0.0 && ri>valeurRI_seuil && rc>valeurRC_seuil) || (fc.dbs.exd.ui.checkbtn1.isSelected() && ri_rc> valeurRI_pour_RC_ini)){
     		//if((fc.dbs.exd.ui.checkbtn1.isSelected() && ri_rc> valeurRI_pour_RC_ini)){
     			fichierSortie.println(cluster1+";"+cluster2+";"+ri+";"+rc+";"+ri_rc+";Y");
     		}
