@@ -226,7 +226,7 @@ public class FiltresChameleon
 			
 			for(int j = cluster_visite; j<Clusters.size(); j++)
 			{
-				double distance=dbs.DistancePts(Coord_Moyenne.get(i).get(1), Coord_Moyenne.get(i).get(2), Coord_Moyenne.get(j).get(1), Coord_Moyenne.get(i).get(2))/1000;
+				double distance=dbs.DistancePts(Coord_Moyenne.get(i).get(1), Coord_Moyenne.get(i).get(2), Coord_Moyenne.get(j).get(1), Coord_Moyenne.get(j).get(2))/1000;
 				//TODO AQUI ESTA EL ERROR cambiar para que no se calcule entre ellos mismos
 				if(i!=j && distance<150){
 					double ncInterne2pub =NbCollaboration(j,j);
