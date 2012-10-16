@@ -32,6 +32,7 @@ public class ExtractionDonnees
 				Coord.get(i).add(resultat.getDouble(ui.tcoord.getText()+".IDc"));
 				Coord.get(i).add(resultat.getDouble(ui.tcoord.getText()+".Longitude"));
 				Coord.get(i).add(resultat.getDouble(ui.tcoord.getText()+".Latitude"));
+				Coord.get(i).add(0.0);//Position pour savoir si le point est visite ou pas
 				IDbc.add(new Vector<Integer>());
 				IDbc.get(i).add(i);
 				IDbc.get(i).add((int) resultat.getDouble(ui.tcoord.getText()+".IDc"));
@@ -62,6 +63,7 @@ public class ExtractionDonnees
 				Coord.get(i).add(resultat1.getDouble(ui.tcoord.getText()+".IDc"));
 				Coord.get(i).add(resultat1.getDouble(ui.tcoord.getText()+".Longitude"));
 				Coord.get(i).add(resultat1.getDouble(ui.tcoord.getText()+".Latitude"));
+				Coord.get(i).add(0.0);//Position pour savoir si le point est visite ou pas default false=0.0
 				IDpc.add(new Vector<Integer>());
 				IDpc.get(i).add(i);
 				IDpc.get(i).add((int) resultat1.getDouble(ui.tcoord.getText()+".IDc"));
@@ -105,6 +107,7 @@ public class ExtractionDonnees
 				Coord.get(i).add(resultat1.getDouble(ui.tcoord.getText()+".IDc"));
 				Coord.get(i).add(resultat1.getDouble(ui.tcoord.getText()+".Longitude"));
 				Coord.get(i).add(resultat1.getDouble(ui.tcoord.getText()+".Latitude"));
+				Coord.get(i).add(0.0);//Position pour savoir si le point est visite ou pas default false=0.0
 				IDpc.add(new Vector<Integer>());
 				IDpc.get(i).add(i);
 				IDpc.get(i).add((int) resultat1.getDouble(ui.tcoord.getText()+".IDc"));
