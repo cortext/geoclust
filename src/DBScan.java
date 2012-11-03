@@ -17,7 +17,7 @@ public class DBScan
 		//choix minPts
 		int MinPts = Integer.valueOf(exd.ui.tnbpts.getText());
 //		System.out.println("min pts = "+MinPts);
-
+		int MinPds = Integer.valueOf(exd.ui.tpoids.getText());
 		//choix du seuil d'éloignement (pour le densité) R
 		double eps = Double.valueOf(exd.ui.tray.getText());//en mètres
 //		System.out.println("ray = "+R);
@@ -41,11 +41,12 @@ public class DBScan
 		    if(exd.Coord.get(i).get(3)==0.0){
 		    	exd.Coord.get(i).set(3,1.0);
 		    
-		    	Vector<Integer> PtsVoisins = regionQuery(i, eps);
-		    	
-		    	if(MinPts>0 && PtsVoisins.size()>MinPts){
+		    	Vector<Object> PtsVoisinsPoids = regionQuery(i, eps);
+		    	Vector<Integer> PtsVoisins = (Vector<Integer>) PtsVoisinsPoids.get(0);
+		    	int poids_cluster = Integer.valueOf(PtsVoisinsPoids.get(1).toString());
+		    	if(MinPts>0 && PtsVoisins.size()>MinPts && poids_cluster>=MinPds){
 		    		numClust++;
-		    		expandCluster(i,PtsVoisins,numClust,eps,MinPts);
+		    		expandCluster(i,PtsVoisins,numClust,eps,MinPts,MinPds);
 		    	}
 		    }
 	    }
@@ -81,9 +82,10 @@ public class DBScan
 	    return r;
 	}
 	
-	public Vector<Integer> regionQuery(int i,Double eps){
+	public Vector<Object> regionQuery(int i,Double eps){
 		Vector<Integer> indexVoisins = new Vector<Integer>();
-		
+		Vector<Object> indexVoisinsPoids= new Vector<Object>();
+		int poids = 0;
 		for (int j=0; j<v1; j++) //boucle pour compter le nombre de voisins proches de i. j est un voisin de i.
 		{
 			if(i!=j){//excluir lui-meme
@@ -92,17 +94,22 @@ public class DBScan
 				double phii = exd.Coord.get(i).get(2);
 				double phij = exd.Coord.get(j).get(2);
 				double distancePoints = DistancePts(lambdai, phii, lambdaj, phij);
+				int poids_i=(int)(double)exd.Coord.get(i).get(4);
+				int poids_j=(int)(double)exd.Coord.get(j).get(4);
 				
 				if (distancePoints <= eps  )//ici, en excluant la distance nulle, on considère que i n'est pas voisin de lui-même. et si le point est visite
 				{
 					indexVoisins.add(j);
+					poids=poids_i+poids_j+poids;
 				}
 			}
 		}
-		return indexVoisins;
+		indexVoisinsPoids.add(indexVoisins);
+		indexVoisinsPoids.add(poids);
+		return indexVoisinsPoids;
 	}
 	
-	public void expandCluster(int i,Vector<Integer>PtsVoisins,int numClust,double eps,int MinPts){
+	public void expandCluster(int i,Vector<Integer>PtsVoisins,int numClust,double eps,int MinPts,int MinPds){
 		MNumClust.set(i,numClust);
 		//liste contient les index des voisins
 		for(int x=0;x<=PtsVoisins.size()-1;x++){
@@ -111,8 +118,11 @@ public class DBScan
 			if(exd.Coord.get(icousin).get(3)==0.0){
 				//Change pour visite
 				exd.Coord.get(icousin).set(3, 1.0);
-				Vector<Integer> PtsVoisinsCousins = regionQuery(icousin, eps);
-				if((PtsVoisinsCousins.size()-1)>=MinPts){
+				Vector<Object> PtsVoisinsCousinsPoids = regionQuery(icousin, eps);
+				Vector<Integer> PtsVoisinsCousins = (Vector<Integer>) PtsVoisinsCousinsPoids.get(0);
+				int poids_cluster = Integer.valueOf(PtsVoisinsCousinsPoids.get(1).toString());
+				
+				if((PtsVoisinsCousins.size()-1)>=MinPts && poids_cluster>=MinPds){
 					PtsVoisins.addAll(PtsVoisinsCousins);
 				}
 			}

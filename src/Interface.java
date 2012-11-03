@@ -38,6 +38,7 @@ public class Interface extends JFrame
 	public JLabel seuil1 = new JLabel("Seuil RI");
 	public JLabel seuil2 = new JLabel("Seuil RC");
 	public JLabel iter = new JLabel("Nombre d'itérations de Chameleon");
+	public JLabel poids = new JLabel("Min poids des points");
 		
 //	JRadioButton jr0 = new JRadioButton("Geographic  distance");
 //    JRadioButton jr1 = new JRadioButton("Levenstein");
@@ -46,6 +47,7 @@ public class Interface extends JFrame
     JRadioButton jr4 = new JRadioButton("Brevets");
     JRadioButton jr5 = new JRadioButton("Publications");
     JCheckBox checkbtn1 = new JCheckBox("Formule (RI*RC^1.5)");
+    JCheckBox checkbtn2 = new JCheckBox("Utiliser les poids des points");
     JRadioButton defaut = new JRadioButton("Defaut");
     JRadioButton param = new JRadioButton("Parametrable");
     
@@ -66,6 +68,7 @@ public class Interface extends JFrame
     JTextField tseuil1 = new JTextField();
     JTextField tseuil2 = new JTextField();
     JTextField titer = new JTextField();
+    JTextField tpoids = new JTextField();
     
 	public Interface(InterfaceBD bd)
 	{
@@ -85,6 +88,7 @@ public class Interface extends JFrame
         jr4.addActionListener(new RadioStateListener());
         jr5.addActionListener(new RadioStateListener());
         checkbtn1.addActionListener(new CheckBoxListener());
+        checkbtn2.addActionListener(new CheckBoxListener2());
         defaut.addActionListener(new RadioDef());
         param.addActionListener(new RadioDef());
         
@@ -108,6 +112,7 @@ public class Interface extends JFrame
         tray.setFont(f1);
         tseuil1.setFont(f1);
         titer.setFont(f1);
+        tpoids.setFont(f1);
         tseuil2.setFont(f1);
         tnbpts.setFont(f1);
         tcoord.setFont(f1);
@@ -117,6 +122,7 @@ public class Interface extends JFrame
         tray.setForeground(Color.BLUE);
         tseuil1.setForeground(Color.BLUE);
         titer.setForeground(Color.BLUE);
+        tpoids.setForeground(Color.BLUE);
         tseuil2.setForeground(Color.BLUE);
         tnbpts.setForeground(Color.BLUE);
         tcoord.setForeground(Color.BLUE);
@@ -145,6 +151,7 @@ public class Interface extends JFrame
         jr4.setBackground(col);
         jr5.setBackground(col);
         checkbtn1.setBackground(col);
+        checkbtn2.setBackground(col);
         
         defaut.setBackground(Color.getHSBColor(10, 10, 50));
         param.setBackground(Color.getHSBColor(10, 10, 50));
@@ -160,14 +167,17 @@ public class Interface extends JFrame
         pan1.add(pub);				pan1.add(fin);				pan1.add(output);
         pan1.add(coord);			pan1.add(nbpts);			pan1.add(jtfint3);
         pan1.add(tcoord);          	pan1.add(tnbpts);			pan1.add(output2);
-        pan1.add(iter);         	pan1.add(ray);				pan1.add(jtfint4);
-        pan1.add(titer);			pan1.add(tray);	        	pan1.add(jr4);
-        pan1.add(new JLabel(""));	pan1.add(new JLabel(""));	pan1.add(jr5);
-        pan1.add(new JLabel(""));	pan1.add(new JLabel(""));	pan1.add(jr3);
+        pan1.add(ray);          	pan1.add(checkbtn2);	    pan1.add(jtfint4);
+        pan1.add(tray); 			pan1.add(poids);	        pan1.add(jr4);
+        pan1.add(iter);         	pan1.add(tpoids);	        pan1.add(jr5);
+        pan1.add(titer);			pan1.add(new JLabel(""));	pan1.add(jr3);
         pan1.add(new JLabel(""));	pan1.add(new JLabel(""));	pan1.add(bouton2);
         
         this.setContentPane(pan1);
         this.setVisible(true);
+        poids.setVisible(false);
+        tpoids.setText("0");
+        tpoids.setVisible(false);
 
 	}
 	
@@ -220,7 +230,7 @@ public class Interface extends JFrame
         public void actionPerformed(ActionEvent e) 
         {
         	if(checkbtn1.isSelected()){
-        		ri_pour_rc=true; 
+        		ri_pour_rc=true;
         		seuil1.setText("Total RI*RC^1.5");
         		tseuil1.setText("100");
         		tseuil2.setText("0");
@@ -240,6 +250,24 @@ public class Interface extends JFrame
 	}
 	
 
+	class CheckBoxListener2 implements ActionListener
+	{	 
+        public void actionPerformed(ActionEvent e) 
+        {
+        	if(checkbtn2.isSelected()){
+        		tpoids.setText("200");
+        		poids.setVisible(true);
+        		tpoids.setVisible(true);
+    		}
+        	else{
+        		tpoids.setText("0");
+        		poids.setVisible(false);
+        		tpoids.setVisible(false);
+    		}
+        }
+        
+	}
+	
 	class RadioDef implements ActionListener
 	{	 
         public void actionPerformed(ActionEvent e) 
@@ -247,9 +275,9 @@ public class Interface extends JFrame
         	if(defaut.isSelected())
         	{
         		pub.setText("a01_06_pub_idp_idc");
-        		brev.setText("a01_04_pat_idb_idc");
-        		jtfint3.setText("ResultatsClustering.csv");
-        		jtfint4.setText("RI_RC.csv");
+        		brev.setText("a01_04_pat_idb_idc_eu");
+        		jtfint3.setText("ResultsClustsMinPtsMinPdsRIRC.csv");
+        		jtfint4.setText("ResultsClustsMinPtsMinPdsRIRC_RI_RC.csv");
         		deb.setText("1980");
         		fin.setText("2010");
         		tnbpts.setText("5");
@@ -258,7 +286,7 @@ public class Interface extends JFrame
         		tseuil2.setText("10");
         		titer.setText("1");
         		jr4.setSelected(true);
-        		tcoord.setText("a01_03_longlatcouple_idc");
+        		tcoord.setText("a01_03_longlatcouple_idc_all_unic");
         	}
         }
         

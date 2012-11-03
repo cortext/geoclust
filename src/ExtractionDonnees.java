@@ -52,10 +52,14 @@ public class ExtractionDonnees
 		}
 		else if(ui.brevpat == 1)//publications sélectionnées
 		{ 
-			String query1 = "select "+ui.pub.getText()+".IDc,"+ui.pub.getText()+".IDp,"+ui.tcoord.getText()+".IDc, "+ui.tcoord.getText()+".Latitude,"+ui.tcoord.getText()+".Longitude from "+ui.tcoord.getText()+", "+ui.pub.getText()+" where " +ui.pub.getText()+".Year >= "+ ui.adeb+ " AND "+ui.pub.getText()+".Year<= " +ui.afin+" AND "+ui.pub.getText()+".IDc = "+ui.tcoord.getText()+".IDc GROUP BY "+ui.tcoord.getText()+".IDc, "+ui.tcoord.getText()+".Latitude,"+ui.tcoord.getText()+".Longitude;";
+			String query1 = "SELECT "+ui.pub.getText()+".IDc,"+ui.pub.getText()+".IDp,"+ui.tcoord.getText()+".IDc, "+ui.tcoord.getText()+".Latitude,"+ui.tcoord.getText()+".Longitude," + "COUNT("+ui.pub.getText()+".IDp) AS quantite "+
+					        "FROM "+ui.tcoord.getText()+", "+ui.pub.getText()+" " +
+							"WHERE " +ui.pub.getText()+".Year >= "+ ui.adeb+ " AND "+ui.pub.getText()+".Year<= " +ui.afin+" AND "+ui.pub.getText()+".IDc = "+ui.tcoord.getText()+".IDc " +
+							"AND "+ui.tcoord.getText()+".Latitude <> 0 AND "+ ui.tcoord.getText()+".Longitude <> 0 "+
+							"GROUP BY "+ui.tcoord.getText()+".IDc, "+ui.tcoord.getText()+".Latitude,"+ui.tcoord.getText()+".Longitude;";
 
 			ResultSet resultat1 =  con.stat.executeQuery(query1); 
-		
+		    
 			i = 0;
 			while(resultat1.next())
 			{ 
@@ -64,6 +68,7 @@ public class ExtractionDonnees
 				Coord.get(i).add(resultat1.getDouble(ui.tcoord.getText()+".Longitude"));
 				Coord.get(i).add(resultat1.getDouble(ui.tcoord.getText()+".Latitude"));
 				Coord.get(i).add(0.0);//Position pour savoir si le point est visite ou pas default false=0.0
+				Coord.get(i).add(resultat1.getDouble(".quantite")); // Quantite des points c est a dire le poid
 				IDpc.add(new Vector<Integer>());
 				IDpc.get(i).add(i);
 				IDpc.get(i).add((int) resultat1.getDouble(ui.tcoord.getText()+".IDc"));
