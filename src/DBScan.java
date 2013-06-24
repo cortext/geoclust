@@ -19,7 +19,7 @@ public class DBScan
 //		System.out.println("min pts = "+MinPts);
 		int MinPds = Integer.valueOf(exd.ui.tpoids.getText());
 		//choix du seuil d'�loignement (pour le densit�) R
-		double eps = Double.valueOf(exd.ui.tray.getText());//en m�tres
+		double eps = Double.valueOf(exd.ui.tray.getText());//en metres
 //		System.out.println("ray = "+R);
 
 		MNumClust = new Vector<Integer>();// matrice associant � chaque identifiant de p�le un num�ro de cluster
@@ -36,7 +36,7 @@ public class DBScan
 		//fin remplissage num clust avec des zeros
 		System.out.println("Fin remplissage de numClust avec des zeros");
 
-	    for (int i=0; i<v1; i++ )// i repr�sente un p�le
+	    for (int i=0; i<v1; i++ )// i represente un pole
 	    {
 		    if(exd.Coord.get(i).get(3)==0.0){
 		    	exd.Coord.get(i).set(3,1.0);
@@ -44,8 +44,8 @@ public class DBScan
 		    	Vector<Object> PtsVoisinsPoids = regionQuery(i, eps);
 		    	Vector<Integer> PtsVoisins = (Vector<Integer>) PtsVoisinsPoids.get(0);
 		    	int poids_cluster = Integer.valueOf(PtsVoisinsPoids.get(1).toString());
-		    //if(MinPts>0 && PtsVoisins.size()>MinPts && poids_cluster>=MinPds){
-		    	if(poids_cluster>=MinPds){
+		    	if(MinPts>0 && PtsVoisins.size()>MinPts && poids_cluster>=MinPds){
+		    	//if(poids_cluster>=MinPds){
 		    		numClust++;
 		    		expandCluster(i,PtsVoisins,numClust,eps,MinPts,MinPds);
 		    	}
@@ -82,7 +82,7 @@ public class DBScan
 
 	    return r;
 	}
-	
+	/*Trouve les points voisines d un point specifique, on fait lanlyse des voisins en obtenant le poids si le critere de distance minimale est remplie */
 	public Vector<Object> regionQuery(int i,Double eps){
 		Vector<Integer> indexVoisins = new Vector<Integer>();
 		Vector<Object> indexVoisinsPoids= new Vector<Object>();
