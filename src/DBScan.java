@@ -18,15 +18,15 @@ public class DBScan
 		int MinPts = Integer.valueOf(exd.ui.tnbpts.getText());
 //		System.out.println("min pts = "+MinPts);
 		int MinPds = Integer.valueOf(exd.ui.tpoids.getText());
-		//choix du seuil d'éloignement (pour le densité) R
-		double eps = Double.valueOf(exd.ui.tray.getText());//en mètres
+		//choix du seuil d'ï¿½loignement (pour le densitï¿½) R
+		double eps = Double.valueOf(exd.ui.tray.getText());//en mï¿½tres
 //		System.out.println("ray = "+R);
 
-		MNumClust = new Vector<Integer>();// matrice associant à chaque identifiant de pôle un numéro de cluster
+		MNumClust = new Vector<Integer>();// matrice associant ï¿½ chaque identifiant de pï¿½le un numï¿½ro de cluster
 		
 		int numClust = 0;
 
-		//on remplit MClust des identifiants des pôles sur la première colonne et de zéros sur la seconde colonne
+		//on remplit MClust des identifiants des pï¿½les sur la premiï¿½re colonne et de zï¿½ros sur la seconde colonne
 
 		for (int k=0; k<v1; k++ )
 		{
@@ -36,7 +36,7 @@ public class DBScan
 		//fin remplissage num clust avec des zeros
 		System.out.println("Fin remplissage de numClust avec des zeros");
 
-	    for (int i=0; i<v1; i++ )// i représente un pôle
+	    for (int i=0; i<v1; i++ )// i reprï¿½sente un pï¿½le
 	    {
 		    if(exd.Coord.get(i).get(3)==0.0){
 		    	exd.Coord.get(i).set(3,1.0);
@@ -44,7 +44,8 @@ public class DBScan
 		    	Vector<Object> PtsVoisinsPoids = regionQuery(i, eps);
 		    	Vector<Integer> PtsVoisins = (Vector<Integer>) PtsVoisinsPoids.get(0);
 		    	int poids_cluster = Integer.valueOf(PtsVoisinsPoids.get(1).toString());
-		    	if(MinPts>0 && PtsVoisins.size()>MinPts && poids_cluster>=MinPds){
+		    //if(MinPts>0 && PtsVoisins.size()>MinPts && poids_cluster>=MinPds){
+		    	if(poids_cluster>=MinPds){
 		    		numClust++;
 		    		expandCluster(i,PtsVoisins,numClust,eps,MinPts,MinPds);
 		    	}
@@ -97,7 +98,7 @@ public class DBScan
 				int poids_i=(int)(double)exd.Coord.get(i).get(4);
 				int poids_j=(int)(double)exd.Coord.get(j).get(4);
 				
-				if (distancePoints <= eps  )//ici, en excluant la distance nulle, on considère que i n'est pas voisin de lui-même. et si le point est visite
+				if (distancePoints <= eps  )//ici, en excluant la distance nulle, on considï¿½re que i n'est pas voisin de lui-mï¿½me. et si le point est visite
 				{
 					indexVoisins.add(j);
 					poids=poids_i+poids_j+poids;
@@ -122,7 +123,8 @@ public class DBScan
 				Vector<Integer> PtsVoisinsCousins = (Vector<Integer>) PtsVoisinsCousinsPoids.get(0);
 				int poids_cluster = Integer.valueOf(PtsVoisinsCousinsPoids.get(1).toString());
 				
-				if((PtsVoisinsCousins.size()-1)>=MinPts && poids_cluster>=MinPds){
+				//if((PtsVoisinsCousins.size()-1)>=MinPts && poids_cluster>=MinPds){
+				if(poids_cluster>=MinPds){
 					PtsVoisins.addAll(PtsVoisinsCousins);
 				}
 			}

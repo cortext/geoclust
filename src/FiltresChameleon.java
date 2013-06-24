@@ -24,10 +24,10 @@ public class FiltresChameleon
 		dbs = dbscan;
 		formuleIsSelected=dbs.exd.ui.checkbtn1.isSelected();
 		
-		if(dbs.exd.ui.brevpat == 1||dbs.exd.ui.brevpat == 3){PubPat = dbs.exd.Pub; IDpbc =dbs.exd.IDpc;}//publications sélectionnées
+		if(dbs.exd.ui.brevpat == 1||dbs.exd.ui.brevpat == 3){PubPat = dbs.exd.Pub; IDpbc =dbs.exd.IDpc;}//publications sï¿½lectionnï¿½es
 		else{PubPat = (Vector<Vector<Integer>>) dbs.exd.Pat; IDpbc = dbs.exd.IDbc;}
 		
-		System.out.println("Début filtres chameleon");
+		System.out.println("Dï¿½but filtres chameleon");
 
 		CPubPat = ClassePubPat();
 		//double ri_rc_parametres=Double.valueOf(dbs.exd.ui.tseuil1.getText())*Math.pow(Double.valueOf(dbs.exd.ui.tseuil2.getText()),1.5);
@@ -45,6 +45,8 @@ public class FiltresChameleon
 		int nbfusions = 0;
 		for(int iter=0; iter<Integer.valueOf(dbs.exd.ui.titer.getText()); iter++)
 		{
+			int a=0;
+			int b=0;
 			Filtres(dbs);
 			for(int i=0; i<RI.size();i++)
 			{
@@ -65,8 +67,8 @@ public class FiltresChameleon
 					if((ri_rc!=0.0 && ri_rc_parametres!=0.0 && ri_rc>ri_rc_parametres)||(ri!=0.0 && rc!=0.0 && ri>ri_parametres && rc>rc_parametres)){ 
 					//if((ri_rc!=0.0 && ri_rc>ri_rc_parametres)){if anterior
 						
-						Integer a =Integer.valueOf(RI.get(i).get(0).toString().substring(0,RI.get(i).get(0).toString().length()-2));
-						Integer b = Integer.valueOf(RI.get(i).get(1).toString().substring(0,RI.get(i).get(1).toString().length()-2));
+						a =Integer.valueOf(RI.get(i).get(0).toString().substring(0,RI.get(i).get(0).toString().length()-2));
+						b = Integer.valueOf(RI.get(i).get(1).toString().substring(0,RI.get(i).get(1).toString().length()-2));
 						//TODO 
 						if(a!=b){
 						Fusionne(a,b);
@@ -105,14 +107,14 @@ public class FiltresChameleon
 				}	
 			}
 			*/
-			System.out.println("nb fusions ap l'itération numéro "+(iter+1)+" : " + nbfusions);
+			System.out.println("nb fusions ap l'itï¿½ration numï¿½ro "+(iter+1)+" : " + nbfusions);
 		}
 		//TODO enlever Filtres(dbs) ;
 		System.out.println("nb de clusters: " + Clusters.size());
 //		System.out.println("Nb PubPat = "+ NbPubPat);
 		System.out.println("RI = "+RI);
 //		System.out.println("CPubPat = "+CPubPat);
-//		System.out.println("IDpôles = "+IDpbc);
+//		System.out.println("IDpï¿½les = "+IDpbc);
 		System.out.println("Nombre de fusions de clusters : "+(nbfusions));
 	}
 	
@@ -132,16 +134,19 @@ public class FiltresChameleon
 		Vector<Integer> num = new Vector<Integer>();		
 
 		int nb=0;
-
 		for(int i=0; i<dbs.MNumClust.size(); i++)
 		{
+			int auxa=0;
+			int auxb=0;
 			if(dbs.MNumClust.get(i)!=0)
 			{
 				if(nb!=0)
 				{	boolean present = false;
 					for(int k=0; k<nb; k++)
 					{
-						if(dbs.MNumClust.get(i)==num.get(k))
+						auxa=dbs.MNumClust.get(i);
+						auxb=num.get(k);
+						if(auxa==auxb)
 					 	{
 							present=true;
 							Clusters.get(k).add((int) IDpbc.get(i).get(0));
@@ -177,13 +182,13 @@ public class FiltresChameleon
 				{
 					Clusters.add(new Vector<Object>());
 					Clusters.get(nb).add(dbs.MNumClust.get(i));
-					Clusters.get(nb).add((int) IDpbc.get(i).get(0));//que pour requête sur publications pour le moment
+					Clusters.get(nb).add((int) IDpbc.get(i).get(0));//que pour requï¿½te sur publications pour le moment
 					
 					num.add(dbs.MNumClust.get(i));
 					
 					ClustersID.add(new Vector<Object>());
 					ClustersID.get(nb).add(dbs.MNumClust.get(i));
-					ClustersID.get(nb).add((int) IDpbc.get(i).get(1));//que pour requête sur publications pour le moment
+					ClustersID.get(nb).add((int) IDpbc.get(i).get(1));//que pour requï¿½te sur publications pour le moment
 					
 					ClustersCoords.add(new Vector<Double>());
 					ClustersCoords.get(nb).add((double)dbs.MNumClust.get(i));
@@ -207,13 +212,13 @@ public class FiltresChameleon
 		Vector<Vector<Double>> Coord_Moyenne=CoordMoyenneParCluster(ClustersCoords);
 		System.out.println("Fin composition des clusters");
 //		System.out.println("Clusters = "+Clusters);		
-//		System.out.println("numéros des clusters = "+num);
+//		System.out.println("numï¿½ros des clusters = "+num);
 //		System.out.println("MNumClust = "+dbs.MNumClust);
 		int cluster_visite=1;
 		for(int i=0; i<Clusters.size()-1; i++)
 		{
 //			int nbPubPat1 = 0;
-//			for(int k=1; k<Clusters.get(i).size(); k++)//on comptabilise le nb de publications au sein d'un même cluster
+//			for(int k=1; k<Clusters.get(i).size(); k++)//on comptabilise le nb de publications au sein d'un mï¿½me cluster
 //			{
 //				nbPubPat1+=CPubPat.get((Integer) Clusters.get(i).get(k)).size();
 //			}
@@ -283,7 +288,7 @@ public class FiltresChameleon
 				}
 			}
 			cluster_visite++;
-		}// on compare les RI et RC des clusters. Si ces valeurs sont très élevées, on fusionne les clusters. Sinon, on les laisse tels quels.
+		}// on compare les RI et RC des clusters. Si ces valeurs sont trï¿½s ï¿½levï¿½es, on fusionne les clusters. Sinon, on les laisse tels quels.
 //		System.out.println("Clusters = "+Clusters);
 //		System.out.println("ClustersID = "+ClustersID);
 		System.out.println("Ri sin ordenar"+RI);
@@ -296,21 +301,21 @@ public class FiltresChameleon
 	{
 		double nb=0;
 		
-		for(int k=1; k<(int)Clusters.get(i).size(); k++)//attention, zéro est le numéro du cluster
+		for(int k=1; k<(int)Clusters.get(i).size(); k++)//attention, zï¿½ro est le numï¿½ro du cluster
 		{
 			int a = (Integer) Clusters.get(i).get(k);
-			for(int l=1; l<(int)Clusters.get(j).size(); l++)//attention, zéro est le numéro du pôle
+			for(int l=1; l<(int)Clusters.get(j).size(); l++)//attention, zï¿½ro est le numï¿½ro du pï¿½le
 			{
 				int b = (Integer) Clusters.get(j).get(l);
 				if(i==j)
 				{
 					if(k!=l)
 					{
-						for(int m=1; m<(int)CPubPat.get(a).size(); m++)//attention, zéro est le numéro du pôle
+						for(int m=1; m<(int)CPubPat.get(a).size(); m++)//attention, zï¿½ro est le numï¿½ro du pï¿½le
 						{
 							for(int n=1; n<(int)CPubPat.get(b).size(); n++)
 							{
-								if((int)CPubPat.get(a).get(m) == (int) CPubPat.get(b).get(n))//si les deux pôles ont un même id de publication
+								if((int)CPubPat.get(a).get(m) == (int) CPubPat.get(b).get(n))//si les deux pï¿½les ont un mï¿½me id de publication
 								{
 									nb ++;
 								}
@@ -319,11 +324,11 @@ public class FiltresChameleon
 					}else{continue;}
 				}else
 				{
-					for(int m=1; m<(int)CPubPat.get(a).size(); m++)//attention, zéro est le numéro du cluster
+					for(int m=1; m<(int)CPubPat.get(a).size(); m++)//attention, zï¿½ro est le numï¿½ro du cluster
 					{
 						for(int n=1; n<(int)CPubPat.get(b).size(); n++)
 						{
-							if((int) CPubPat.get(a).get(m) == (int) CPubPat.get(b).get(n))//si les deux pôles ont un même id de publication
+							if((int) CPubPat.get(a).get(m) == (int) CPubPat.get(b).get(n))//si les deux pï¿½les ont un mï¿½me id de publication
 							{
 								nb ++;
 							}
@@ -331,7 +336,7 @@ public class FiltresChameleon
 					}
 				}
 			}
-		}// on compte le nombre de publications/brevets nés de collaborations entre les pôles du cluster i et ceux du cluster j.
+		}// on compte le nombre de publications/brevets nï¿½s de collaborations entre les pï¿½les du cluster i et ceux du cluster j.
 		return nb; 
 	}
 	
@@ -390,8 +395,8 @@ public class FiltresChameleon
 		}
 
 		System.out.println("Taille CP = "+CP.size());
-		System.out.println("Fin réorganisation pub");
-		return CP;// au final, CP contient, pour chaque pôle (IDC), toutes ses publications par leur IDP.
+		System.out.println("Fin rï¿½organisation pub");
+		return CP;// au final, CP contient, pour chaque pï¿½le (IDC), toutes ses publications par leur IDP.
 	}
 	
 	public class MyComparator implements Comparator<Vector<Double>> {
