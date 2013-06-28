@@ -24,20 +24,20 @@ public class Interface extends JFrame
 	
 	JButton bouton2 = new JButton("Classifier");
 
-	JLabel label0 = new JLabel("Tables de la base de données");
+	JLabel label0 = new JLabel("Tables de la base de donnï¿½es");
 	JLabel label1 = new JLabel("Intervalle d'analyse");
 	public JLabel brevet = new JLabel("Table des brevets");
 	public JLabel publication = new JLabel("Table des publications");
-	public JLabel coord= new JLabel("Table des coordonnées et identifiants");
+	public JLabel coord= new JLabel("Table des coordonnï¿½es et identifiants");
 	public JLabel output = new JLabel("Nom du fichier de sortie Clusters");
 	public JLabel output2 = new JLabel("Nom du fichier de sortie RI_RC");
-	public JLabel tdeb = new JLabel("Année début");
-	public JLabel tfin = new JLabel("Année fin (inclue)");
+	public JLabel tdeb = new JLabel("Annï¿½e dï¿½but");
+	public JLabel tfin = new JLabel("Annï¿½e fin (inclue)");
 	public JLabel nbpts = new JLabel("Nb minimal de points dans 1 cluster");
-	public JLabel ray = new JLabel("Rayon maximal d'un cluster (en mètres)");
+	public JLabel ray = new JLabel("Rayon maximal d'un cluster (en mï¿½tres)");
 	public JLabel seuil1 = new JLabel("Seuil RI");
 	public JLabel seuil2 = new JLabel("Seuil RC");
-	public JLabel iter = new JLabel("Nombre d'itérations de Chameleon");
+	public JLabel iter = new JLabel("Nombre d'itï¿½rations de Chameleon");
 	public JLabel poids = new JLabel("Min poids des points");
 		
 //	JRadioButton jr0 = new JRadioButton("Geographic  distance");
@@ -196,8 +196,9 @@ public class Interface extends JFrame
 				ExtractionDonnees exd = new ExtractionDonnees(ui, con);
 				
 				DBScan dbs = new DBScan(exd);
+				EcritureResultats ecrituredbs = new EcritureResultats(dbs,false);
 				FiltresChameleon fc = new FiltresChameleon(dbs);
-				EcritureResultats er = new EcritureResultats(dbs);
+				EcritureResultats er = new EcritureResultats(dbs,true);
 				EcritureRIRC rirc= new EcritureRIRC(fc); 
 				
 				long temp_final=System.currentTimeMillis()-temp_ini;
@@ -207,8 +208,9 @@ public class Interface extends JFrame
 				long minute = manque_heure/60000;
 				long manque_minute = manque_heure%60000;
 				long seg = manque_minute/1000;
-				System.out.println("tiempo que tarda heure:minutes:seg -> "+heure+" h:"+minute+" m:"+seg+" s");
-			} catch (SQLException e1) {
+				System.out.println("Temps d execution heure:minutes:seg -> "+heure+" h:"+minute+" m:"+seg+" s");
+				
+	    	} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
@@ -219,7 +221,7 @@ public class Interface extends JFrame
 	{	 
         public void actionPerformed(ActionEvent e) 
         {
-        	if(jr4.isSelected()){brevpat = 0;}//brevets selectionnés
+        	if(jr4.isSelected()){brevpat = 0;}//brevets selectionnï¿½s
         	else{if(jr5.isSelected()){brevpat = 1;}else{brevpat = 3;}}
         }
         

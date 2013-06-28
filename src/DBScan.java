@@ -1,4 +1,3 @@
-import java.util.Iterator;
 import java.util.Vector;
 
 
@@ -18,15 +17,15 @@ public class DBScan
 		int MinPts = Integer.valueOf(exd.ui.tnbpts.getText());
 //		System.out.println("min pts = "+MinPts);
 		int MinPds = Integer.valueOf(exd.ui.tpoids.getText());
-		//choix du seuil d'�loignement (pour le densit�) R
+		//choix du seuil d'aloignement (pour le densite) R
 		double eps = Double.valueOf(exd.ui.tray.getText());//en metres
 //		System.out.println("ray = "+R);
 
-		MNumClust = new Vector<Integer>();// matrice associant � chaque identifiant de p�le un num�ro de cluster
+		MNumClust = new Vector<Integer>();// matrice associant a chaque identifiant de pole un numero de cluster
 		
 		int numClust = 0;
 
-		//on remplit MClust des identifiants des p�les sur la premi�re colonne et de z�ros sur la seconde colonne
+		//on remplit MClust des identifiants des poles sur la premiere colonne et de zeros sur la seconde colonne
 
 		for (int k=0; k<v1; k++ )
 		{
@@ -44,8 +43,8 @@ public class DBScan
 		    	Vector<Object> PtsVoisinsPoids = regionQuery(i, eps);
 		    	Vector<Integer> PtsVoisins = (Vector<Integer>) PtsVoisinsPoids.get(0);
 		    	int poids_cluster = Integer.valueOf(PtsVoisinsPoids.get(1).toString());
-		    	if(MinPts>0 && PtsVoisins.size()>MinPts && poids_cluster>=MinPds){
-		    	//if(poids_cluster>=MinPds){
+		    	//if(MinPts>0 && PtsVoisins.size()>MinPts && poids_cluster>=MinPds){
+		    	if(poids_cluster>=MinPds){
 		    		numClust++;
 		    		expandCluster(i,PtsVoisins,numClust,eps,MinPts,MinPds);
 		    	}
@@ -87,6 +86,8 @@ public class DBScan
 		Vector<Integer> indexVoisins = new Vector<Integer>();
 		Vector<Object> indexVoisinsPoids= new Vector<Object>();
 		int poids = 0;
+		int poids_i=(int)(double)exd.Coord.get(i).get(4);
+		poids += poids_i;
 		for (int j=0; j<v1; j++) //boucle pour compter le nombre de voisins proches de i. j est un voisin de i.
 		{
 			if(i!=j){//excluir lui-meme
@@ -95,13 +96,12 @@ public class DBScan
 				double phii = exd.Coord.get(i).get(2);
 				double phij = exd.Coord.get(j).get(2);
 				double distancePoints = DistancePts(lambdai, phii, lambdaj, phij);
-				int poids_i=(int)(double)exd.Coord.get(i).get(4);
 				int poids_j=(int)(double)exd.Coord.get(j).get(4);
 				
-				if (distancePoints <= eps  )//ici, en excluant la distance nulle, on consid�re que i n'est pas voisin de lui-m�me. et si le point est visite
+				if (distancePoints <= eps  )//ici, en excluant la distance nulle, on considere que i n'est pas voisin de lui-meme. et si le point est visite
 				{
 					indexVoisins.add(j);
-					poids=poids_i+poids_j+poids;
+					poids=poids_i+poids_j+poids;//modifier le poids, il faut additioner juste le poids_j + poids
 				}
 			}
 		}
@@ -113,24 +113,35 @@ public class DBScan
 	public void expandCluster(int i,Vector<Integer>PtsVoisins,int numClust,double eps,int MinPts,int MinPds){
 		MNumClust.set(i,numClust);
 		//liste contient les index des voisins
-		for(int x=0;x<=PtsVoisins.size()-1;x++){
-			int icousin=PtsVoisins.get(x);
-			//on verifie si le p cousin(i cousin) n est pas visite 
-			if(exd.Coord.get(icousin).get(3)==0.0){
-				//Change pour visite
-				exd.Coord.get(icousin).set(3, 1.0);
-				Vector<Object> PtsVoisinsCousinsPoids = regionQuery(icousin, eps);
-				Vector<Integer> PtsVoisinsCousins = (Vector<Integer>) PtsVoisinsCousinsPoids.get(0);
-				int poids_cluster = Integer.valueOf(PtsVoisinsCousinsPoids.get(1).toString());
-				
-				//if((PtsVoisinsCousins.size()-1)>=MinPts && poids_cluster>=MinPds){
-				if(poids_cluster>=MinPds){
-					PtsVoisins.addAll(PtsVoisinsCousins);
+		if(PtsVoisins.size()!=0){
+			for(int x=0;x<=PtsVoisins.size()-1;x++){
+				int icousin=PtsVoisins.get(x);
+				//on verifie si le p cousin(i cousin) n est pas visite 
+				if(exd.Coord.get(icousin).get(3)==0.0){
+					//Change pour visite
+					exd.Coord.get(icousin).set(3, 1.0);
+					Vector<Object> PtsVoisinsCousinsPoids = regionQuery(icousin, eps);
+					Vector<Integer> PtsVoisinsCousins = (Vector<Integer>) PtsVoisinsCousinsPoids.get(0);
+					int poids_cluster = Integer.valueOf(PtsVoisinsCousinsPoids.get(1).toString());
+					
+					//if((PtsVoisinsCousins.size()-1)>=MinPts && poids_cluster>=MinPds){
+					if(poids_cluster>=MinPds){
+						PtsVoisins.addAll(PtsVoisinsCousins);
+					}
+				}
+				if(MNumClust.get(icousin)==0){
+					MNumClust.set(icousin,numClust);
 				}
 			}
-			if(MNumClust.get(icousin)==0){
-				MNumClust.set(icousin,numClust);
-			}
 		}
+	}
+	/**
+	 * Methode pour creer les clusters a partir des points qui ont le poid au dessus du parametre 
+	 * et qui sont pas dans un cluster parce que ils ne remplissent pas la condition des voisines (MinPoints) 
+	 * 
+	 * @param i = point en question, numClust = le numero du nouveau cluster
+	 * @author Michel Revollo
+	 * */
+	public void createClusterCities(int i,int numClust){ 
 	}
 }

@@ -16,6 +16,7 @@ public class FiltresChameleon
 //	public Vector<Vector<Integer>> NbPubPat = new Vector<Vector<Integer>>();
 	Vector<Vector<Integer>> CPubPat;
 	public Vector<Vector<Integer>> IDpbc ;
+	public Vector<Integer> clustersFusion = new Vector<Integer>(); //clusters qui sont fusiones avec un outre cluster
 	
 	public Vector<Vector<Integer>> PubPat ;
 
@@ -58,7 +59,7 @@ public class FiltresChameleon
 				{
 					//si on a choisi le faire pour la formule ri*rc^alpha 
 					if(dbs.exd.ui.ri_pour_rc){
-						ri_rc=(Double)RI.get(i).get(2)*(Math.pow((Double) RI.get(i).get(3),1.5));
+						ri_rc=(double)RI.get(i).get(4); //(Double)RI.get(i).get(2)*(Math.pow((Double) RI.get(i).get(3),1.5));
 					}
 					else{
 						ri=(double) RI.get(i).get(2);
@@ -69,9 +70,12 @@ public class FiltresChameleon
 						
 						a =Integer.valueOf(RI.get(i).get(0).toString().substring(0,RI.get(i).get(0).toString().length()-2));
 						b = Integer.valueOf(RI.get(i).get(1).toString().substring(0,RI.get(i).get(1).toString().length()-2));
-						//TODO 
-						if(a!=b){
+						//TODO comparaison pour savoir un des clusters est deja fusionne pour ne pas faire la fusion
+						if(a!=b && !clustersFusion.contains(a) && !clustersFusion.contains(b)){
 						Fusionne(a,b);
+						clustersFusion.add(a);
+						clustersFusion.add(b);
+						RI.get(i).set(5,1.0);
 						nbfusions++;
 						}
 						else{
@@ -81,32 +85,6 @@ public class FiltresChameleon
 					}
 				}
 			}
-			/*
-			if(dbs.exd.ui.brevpat == 3)
-			{
-				PubPat = (Vector<Vector<Integer>>) dbs.exd.Pat;
-				
-				CPubPat = ClassePubPat();
-				Filtres(dbs);
-				
-				for(int i=0; i<RI.size();i++)
-				{
-					if(Clusters.size()>1&&(((Double) RI.get(i).get(2)> Double.valueOf(dbs.exd.ui.tseuil1.getText()) )&& ((Double) RC.get(i).get(2)>Double.valueOf(dbs.exd.ui.tseuil2.getText()) )))
-					{
-						Integer a =Integer.valueOf(RI.get(i).get(0).toString().substring(0,RI.get(i).get(0).toString().length()-2));
-						Integer b = Integer.valueOf(RI.get(i).get(1).toString().substring(0,RI.get(i).get(1).toString().length()-2));
-						//TODO
-						if(a!=b){
-							Fusionne(a,b);
-							nbfusions++;
-						}
-						else{
-							continue;
-						}
-					}
-				}	
-			}
-			*/
 			System.out.println("nb fusions ap l'it�ration num�ro "+(iter+1)+" : " + nbfusions);
 		}
 		//TODO enlever Filtres(dbs) ;
@@ -122,7 +100,7 @@ public class FiltresChameleon
 	{
 		for (int k=0; k<dbs.MNumClust.size(); k++)
 		{
-			if((Integer)dbs.MNumClust.get(k) == i)
+			if(dbs.MNumClust.get(k).equals(i))
 			{
 				dbs.MNumClust.set(k,j);
 			}
@@ -232,59 +210,41 @@ public class FiltresChameleon
 			for(int j = cluster_visite; j<Clusters.size(); j++)
 			{
 				double distance=dbs.DistancePts(Coord_Moyenne.get(i).get(1), Coord_Moyenne.get(i).get(2), Coord_Moyenne.get(j).get(1), Coord_Moyenne.get(j).get(2))/1000;
-				//TODO AQUI ESTA EL ERROR cambiar para que no se calcule entre ellos mismos
+
 				if(i!=j && distance<150){
 					double ncInterne2pub =NbCollaboration(j,j);
 					double ncpub=NbCollaboration(i,j);
 					
-					//TODO CAMBIO DE VARIABLES POR LOS VALORES DE LOS CLUSTERS
-					//Se transforma el objeto en una cadena para despues hacer posible el cambio a un double
 					String clust_getI=Clusters.get(i).get(0).toString();
 					String clust_getJ=Clusters.get(j).get(0).toString();
 					
-					//RI.get(RI.size()-1).add((double) i);
-					//RI.get(RI.size()-1).add((double) j);
-
-					//Se cambian las validaciones de casteo para incluir al cluster i y al cluster j
 					RI.add(new Vector<Double>());
 					RI.get(RI.size()-1).add(Double.parseDouble(clust_getI));
 				    RI.get(RI.size()-1).add(Double.parseDouble(clust_getJ));
 				    
+				    //calcul de RI
 					if(ncInterne1pub+ncInterne2pub!=0)
 					{	
 						RI.get(RI.size()-1).add((double)(ncpub/((ncInterne1pub+ncInterne2pub)/2)));
 					}else
 					{
-						//TODO cambio por lo mas bajo en valor antes 999.999
 						RI.get(RI.size()-1).add(0.0);
 					}
 					
-					//calcul de RI
 					double t1 = Clusters.get(i).size();
 					double t2 = Clusters.get(j).size();
-					
-					/*
-					RC.add(new Vector<Double>());
-					RC.get(RC.size()-1).add(Double.parseDouble(clust_getI));
-				    RC.get(RC.size()-1).add(Double.parseDouble(clust_getJ));
-					*/
-					
-				    //RC.get(RC.size()-1).add((double) i);
-					//RC.get(RC.size()-1).add((double) j);
-					//TODO CALCULO RC EN RI
+					//Calcul de RC
 					if((t1/(t1+t2)*ncInterne1pub/t1+t2/(t1+t2)*ncInterne2pub/t2
 							)!=0)
 					{
 						RI.get(RI.size()-1).add((double) (ncpub/(t1/(t1+t2)*ncInterne1pub/t1+t2/(t1+t2)*ncInterne2pub/t2)));
 					}else
 					{
-						/* TODO aqui el cambiaba los valores de RI
-						ncInterne1pub = 1;
-						ncInterne2pub = 1;
-						*/
 						RI.get(RI.size()-1).add(0.0);
 					}
-					//calcul de RC
+					
+					RI.get(RI.size()-1).add((Double)RI.get(RI.size()-1).get(2)*(Math.pow((Double) RI.get(RI.size()-1).get(3),1.5)));//ajout de RI*RC dans le vecteur
+					RI.get(RI.size()-1).add(0.0);
 				}
 			}
 			cluster_visite++;
@@ -292,7 +252,7 @@ public class FiltresChameleon
 //		System.out.println("Clusters = "+Clusters);
 //		System.out.println("ClustersID = "+ClustersID);
 		System.out.println("Ri sin ordenar"+RI);
-		Collections.sort(RI, new MyComparator(3));
+		Collections.sort(RI, new MyComparator(4)); //Critere pour lequel on veut trier (par le resultat RI*RC)  
 		System.out.println("Ri ordenado"+RI);
 		System.out.println("Fin filtres chameleon");
 	}
