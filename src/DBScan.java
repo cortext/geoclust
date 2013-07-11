@@ -11,49 +11,49 @@ public class DBScan
 	{
 		exd = ex;
 		v1 = exd.Coord.size();
-//		v1 = 10000;
 		System.out.println("v1 = "+v1);
-		//choix minPts
-		int MinPts = Integer.valueOf(exd.ui.tnbpts.getText());
-//		System.out.println("min pts = "+MinPts);
+		int MinPts = Integer.valueOf(exd.ui.tnbpts.getText()); //choix minPts
+		//System.out.println("min pts = "+MinPts);
 		int MinPds = Integer.valueOf(exd.ui.tpoids.getText());
-		//choix du seuil d'aloignement (pour le densite) R
-		double eps = Double.valueOf(exd.ui.tray.getText());//en metres
-//		System.out.println("ray = "+R);
-
-		MNumClust = new Vector<Integer>();// matrice associant a chaque identifiant de pole un numero de cluster
 		
-		int numClust = 0;
-
+		double eps = Double.valueOf(exd.ui.tray.getText()); //choix du seuil d'aloignement (pour le densite) R
+		MNumClust = new Vector<Integer>();// matrice associant a chaque identifiant de pole un numero de cluster
+		int numClust = 1;
+		
 		//on remplit MClust des identifiants des poles sur la premiere colonne et de zeros sur la seconde colonne
-
 		for (int k=0; k<v1; k++ )
-		{
+		{ 
 			MNumClust.add(0);
 	    }//fin for k
-	    
-		//fin remplissage num clust avec des zeros
 		System.out.println("Fin remplissage de numClust avec des zeros");
 
 	    for (int i=0; i<v1; i++ )// i represente un pole
 	    {
 		    if(exd.Coord.get(i).get(3)==0.0){
-		    	exd.Coord.get(i).set(3,1.0);
+		    	exd.Coord.get(i).set(3,1.0);//En indiquant que le pole est visite
 		    
 		    	Vector<Object> PtsVoisinsPoids = regionQuery(i, eps);
 		    	Vector<Integer> PtsVoisins = (Vector<Integer>) PtsVoisinsPoids.get(0);
 		    	int poids_cluster = Integer.valueOf(PtsVoisinsPoids.get(1).toString());
 		    	//if(MinPts>0 && PtsVoisins.size()>MinPts && poids_cluster>=MinPds){
-		    	if(poids_cluster>=MinPds){
+		    	if(poids_cluster>=MinPds){//
+		    		expandCluster(i,PtsVoisins,numClust,eps,MinPts,MinPds);//fait appel a la methode pour trouver les voisins du cluster
 		    		numClust++;
-		    		expandCluster(i,PtsVoisins,numClust,eps,MinPts,MinPds);
 		    	}
 		    }
-	    }
-            //fin boucle sur i
+	    }//fin boucle sur i
 	    System.out.println("Fin DBScan quantite clusters "+numClust);
 	}	
 	
+	/**
+	 * Methode pour calculer la distance entre deux coordonnees geographiques
+	 * 
+	 * @param lambdai 
+	 * @param phii 
+	 * @param lambdaj 
+	 * @param phij
+	 * @return distance en metres
+	 */
 	public double DistancePts(double lambdai,double phii,double lambdaj,double phij)
 	{
 		double a = 6378137.0; //en m
@@ -90,7 +90,7 @@ public class DBScan
 		poids += poids_i;
 		for (int j=0; j<v1; j++) //boucle pour compter le nombre de voisins proches de i. j est un voisin de i.
 		{
-			if(i!=j){//excluir lui-meme
+			if(i!=j && MNumClust.get(j)==0){//excluir lui-meme
 				double lambdai = exd.Coord.get(i).get(1);
 				double lambdaj = exd.Coord.get(j).get(1);
 				double phii = exd.Coord.get(i).get(2);
@@ -101,7 +101,7 @@ public class DBScan
 				if (distancePoints <= eps  )//ici, en excluant la distance nulle, on considere que i n'est pas voisin de lui-meme. et si le point est visite
 				{
 					indexVoisins.add(j);
-					poids=poids_i+poids_j+poids;//modifier le poids, il faut additioner juste le poids_j + poids
+					poids=poids_j+poids;//TODO quitar poids i modifier le poids, il faut additioner juste le poids_j + poids
 				}
 			}
 		}
@@ -134,14 +134,5 @@ public class DBScan
 				}
 			}
 		}
-	}
-	/**
-	 * Methode pour creer les clusters a partir des points qui ont le poid au dessus du parametre 
-	 * et qui sont pas dans un cluster parce que ils ne remplissent pas la condition des voisines (MinPoints) 
-	 * 
-	 * @param i = point en question, numClust = le numero du nouveau cluster
-	 * @author Michel Revollo
-	 * */
-	public void createClusterCities(int i,int numClust){ 
 	}
 }
