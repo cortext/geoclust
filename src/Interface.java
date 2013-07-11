@@ -197,9 +197,13 @@ public class Interface extends JFrame
 				
 				DBScan dbs = new DBScan(exd);
 				EcritureResultats ecrituredbs = new EcritureResultats(dbs,false);
-				FiltresChameleon fc = new FiltresChameleon(dbs);
+				FiltresChameleon fc=null;
+				for(int iter=0; iter<Integer.valueOf(dbs.exd.ui.titer.getText()); iter++)
+				{
+					fc = new FiltresChameleon(dbs,iter);
+					EcritureRIRC rirc= new EcritureRIRC(fc,iter); 
+				}
 				EcritureResultats er = new EcritureResultats(dbs,true);
-				EcritureRIRC rirc= new EcritureRIRC(fc); 
 				
 				long temp_final=System.currentTimeMillis()-temp_ini;
 				
@@ -278,8 +282,8 @@ public class Interface extends JFrame
         	{
         		pub.setText("a01_06_pub_idp_idc");
         		brev.setText("a01_04_pat_idb_idc_eu");
-        		jtfint3.setText("ResultsClustsMinPtsMinPdsRIRC.csv");
-        		jtfint4.setText("ResultsClustsMinPtsMinPdsRIRC_RI_RC.csv");
+        		jtfint3.setText("ResultsClusts20kmMinPdsRIRC");
+        		jtfint4.setText("ResultsClusts20kmMinPdsRIRC_RI_RC");
         		deb.setText("1980");
         		fin.setText("2010");
         		tnbpts.setText("5");

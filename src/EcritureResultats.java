@@ -12,10 +12,10 @@ public class EcritureResultats {
 		try 
 		{
 			if(flag){
-				fwe = new FileWriter (dbs.exd.ui.jtfint3.getText());
+				fwe = new FileWriter (dbs.exd.ui.jtfint3.getText()+".csv");
 			}
 			else{
-				fwe = new FileWriter ("DBScan"+dbs.exd.ui.jtfint3.getText());
+				fwe = new FileWriter (dbs.exd.ui.jtfint3.getText()+"_DBScan.csv");
 			}
 			
 		} catch (IOException e1) 

@@ -6,12 +6,12 @@ import java.io.PrintWriter;
 
 public class EcritureRIRC {
 	
-	EcritureRIRC(FiltresChameleon fc)
+	EcritureRIRC(FiltresChameleon fc, int iter)
 	{
 		FileWriter fwe = null;
 		try 
 		{
-			fwe = new FileWriter (fc.dbs.exd.ui.jtfint4.getText());
+			fwe = new FileWriter (fc.dbs.exd.ui.jtfint4.getText()+iter+".csv");
 			
 		} catch (IOException e1) 
 		{
