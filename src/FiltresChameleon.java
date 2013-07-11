@@ -20,7 +20,7 @@ public class FiltresChameleon
 	
 	public Vector<Vector<Integer>> PubPat ;
 
-	FiltresChameleon(DBScan dbscan)
+	FiltresChameleon(DBScan dbscan,int iter)
 	{
 		dbs = dbscan;
 		formuleIsSelected=dbs.exd.ui.checkbtn1.isSelected();
@@ -28,7 +28,7 @@ public class FiltresChameleon
 		if(dbs.exd.ui.brevpat == 1||dbs.exd.ui.brevpat == 3){PubPat = dbs.exd.Pub; IDpbc =dbs.exd.IDpc;}//publications s�lectionn�es
 		else{PubPat = (Vector<Vector<Integer>>) dbs.exd.Pat; IDpbc = dbs.exd.IDbc;}
 		
-		System.out.println("D�but filtres chameleon");
+		System.out.println("Debut filtres chameleon");
 
 		CPubPat = ClassePubPat();
 		//double ri_rc_parametres=Double.valueOf(dbs.exd.ui.tseuil1.getText())*Math.pow(Double.valueOf(dbs.exd.ui.tseuil2.getText()),1.5);
@@ -44,8 +44,8 @@ public class FiltresChameleon
 			rc_parametres=Double.valueOf(dbs.exd.ui.tseuil2.getText());
 		}
 		int nbfusions = 0;
-		for(int iter=0; iter<Integer.valueOf(dbs.exd.ui.titer.getText()); iter++)
-		{
+//		for(int iter=0; iter<Integer.valueOf(dbs.exd.ui.titer.getText()); iter++)
+//		{
 			int a=0;
 			int b=0;
 			Filtres(dbs);
@@ -70,8 +70,8 @@ public class FiltresChameleon
 						
 						a =Integer.valueOf(RI.get(i).get(0).toString().substring(0,RI.get(i).get(0).toString().length()-2));
 						b = Integer.valueOf(RI.get(i).get(1).toString().substring(0,RI.get(i).get(1).toString().length()-2));
-						//TODO comparaison pour savoir un des clusters est deja fusionne pour ne pas faire la fusion
-						if(a!=b && !clustersFusion.contains(a) && !clustersFusion.contains(b)){
+						//TODO && !clustersFusion.contains(a) && !clustersFusion.contains(b) comparaison pour savoir un des clusters est deja fusionne pour ne pas faire la fusion
+						if(a!=b){
 						Fusionne(a,b);
 						clustersFusion.add(a);
 						clustersFusion.add(b);
@@ -85,8 +85,8 @@ public class FiltresChameleon
 					}
 				}
 			}
-			System.out.println("nb fusions ap l'it�ration num�ro "+(iter+1)+" : " + nbfusions);
-		}
+			System.out.println("nb fusions ap l'iteration numero "+(iter+1)+" : " + nbfusions);
+		//}fin for TODO
 		//TODO enlever Filtres(dbs) ;
 		System.out.println("nb de clusters: " + Clusters.size());
 //		System.out.println("Nb PubPat = "+ NbPubPat);
@@ -210,8 +210,8 @@ public class FiltresChameleon
 			for(int j = cluster_visite; j<Clusters.size(); j++)
 			{
 				double distance=dbs.DistancePts(Coord_Moyenne.get(i).get(1), Coord_Moyenne.get(i).get(2), Coord_Moyenne.get(j).get(1), Coord_Moyenne.get(j).get(2))/1000;
-
-				if(i!=j && distance<150){
+				
+				if(i!=j && distance<100){//distance maximale pour fusioner les clusters
 					double ncInterne2pub =NbCollaboration(j,j);
 					double ncpub=NbCollaboration(i,j);
 					
@@ -355,10 +355,16 @@ public class FiltresChameleon
 		}
 
 		System.out.println("Taille CP = "+CP.size());
-		System.out.println("Fin r�organisation pub");
-		return CP;// au final, CP contient, pour chaque p�le (IDC), toutes ses publications par leur IDP.
+		System.out.println("Fin reorganisation pub");
+		return CP;// au final, CP contient, pour chaque pole (IDC), toutes ses publications par leur IDP.
 	}
 	
+	/**
+	 * Class implemente pour possibiliter la comparaison des positions specifiques dans deux vecteurs
+	 * 
+	 * @author darkhealth
+	 *
+	 */
 	public class MyComparator implements Comparator<Vector<Double>> {
 		  private int columnIndex = 0;
 		  public MyComparator(int columnIndex) {this.columnIndex = columnIndex;}

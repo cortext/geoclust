@@ -18,7 +18,7 @@ public class ExtractionDonnees
 
 		int i = 0;
 		
-		if(ui.brevpat == 0)//brevets sélectionnés
+		if(ui.brevpat == 0)//brevets sï¿½lectionnï¿½s
 		{
 		
 			String query = 	"SELECT "+ui.brev.getText()+".IDc,"+ui.brev.getText()+".IDb,"+ui.tcoord.getText()+".IDc, "+ui.tcoord.getText()+".Latitude,"+ui.tcoord.getText()+".Longitude, " + "COUNT("+ui.brev.getText()+".IDb) As quantite " +
@@ -54,7 +54,7 @@ public class ExtractionDonnees
 			}
 			System.out.println("Brevets : "+Pat.size());
 		}
-		else if(ui.brevpat == 1)//publications sélectionnées
+		else if(ui.brevpat == 1)//publications sï¿½lectionnï¿½es
 		{ 
 			String query1 = "SELECT "+ui.pub.getText()+".IDc,"+ui.pub.getText()+".IDp,"+ui.tcoord.getText()+".IDc, "+ui.tcoord.getText()+".Latitude,"+ui.tcoord.getText()+".Longitude," + "COUNT("+ui.pub.getText()+".IDp) AS quantite "+
 					        "FROM "+ui.tcoord.getText()+", "+ui.pub.getText()+" " +
@@ -89,7 +89,7 @@ public class ExtractionDonnees
 				i++;
 			}				
 			System.out.println("Publications : "+Pub.size());
-		}else//selection à la fois des brevets et publications
+		}else//selection ï¿½ la fois des brevets et publications
 		{
 			//chargement et taitement des brevets
 			String querybis = "select "+ui.brev.getText()+".IDc,"+ui.brev.getText()+".IDb from "+ui.brev.getText()+" where " +ui.brev.getText()+".Year >= "+ ui.adeb+ " AND "+ui.brev.getText()+".Year<= " +ui.afin+";";
@@ -134,6 +134,6 @@ public class ExtractionDonnees
 			}				
 			System.out.println("Publications : "+Pub.size());			
 		}
-		System.out.println("Fin extraction données");		
+		System.out.println("Fin extraction donnees");		
 	}
 }
