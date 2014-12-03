@@ -23,12 +23,12 @@ public class InterfaceBD extends JFrame
 	
 	JButton bouton2 = new JButton("Connecter");
 
-	JLabel label0 = new JLabel("Paramètres de connexion");
+	JLabel label0 = new JLabel("Paramï¿½tres de connexion");
 
 	public JLabel serveur = new JLabel("Serveur");
 	public JLabel user = new JLabel("Utilisateur");
 	public JLabel pw= new JLabel("Mot de passe");
-	public JLabel bd = new JLabel("Base de données");
+	public JLabel bd = new JLabel("Base de donnï¿½es");
 	
     JRadioButton defaut = new JRadioButton("Defaut");
     JRadioButton param = new JRadioButton("Parametrable");
@@ -100,7 +100,7 @@ public class InterfaceBD extends JFrame
         	if(defaut.isSelected())
         	{
         		tserver.setText("localhost");
-        		tuser.setText("mirema");
+        		tuser.setText("root");
         		tpw.setText("michel");
         		tbd.setText("test");
         	}

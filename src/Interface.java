@@ -280,8 +280,8 @@ public class Interface extends JFrame
         {
         	if(defaut.isSelected())
         	{
-        		pub.setText("a01_06_pub_idp_idc");
-        		brev.setText("a01_04_pat_idb_idc_eu");
+        		pub.setText("a01_06_pub_idp_idc_ww");
+        		brev.setText("a01_04_pat_idb_idc_ww");
         		jtfint3.setText("ResultsClusts20kmMinPdsRIRC");
         		jtfint4.setText("ResultsClusts20kmMinPdsRIRC_RI_RC");
         		deb.setText("1980");
