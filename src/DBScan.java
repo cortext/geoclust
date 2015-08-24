@@ -12,32 +12,41 @@ public class DBScan
 		exd = ex;
 		v1 = exd.Coord.size();
 		System.out.println("v1 = "+v1);
-		int MinPts = Integer.valueOf(exd.ui.tnbpts.getText()); //choix minPts
-		//System.out.println("min pts = "+MinPts);
-		int MinPds = Integer.valueOf(exd.ui.tpoids.getText());
-		
-		double eps = Double.valueOf(exd.ui.tray.getText()); //choix du seuil d'aloignement (pour le densite) R
+		int MinPts, MinPds;
+		double maxDistanceBetweenTwoPoints;
+		if(exd.ui!=null){
+			MinPts = Integer.valueOf(exd.ui.tnbpts.getText()); //choix minPts
+			//System.out.println("min pts = "+MinPts);
+			MinPds = Integer.valueOf(exd.ui.tpoids.getText()); //quantite des publications ou brevets dans un cluster
+			maxDistanceBetweenTwoPoints = Double.valueOf(exd.ui.tray.getText()); //choix du seuil d'aloignement (pour le densite) R
+			
+		}
+		else{
+			MinPts = Integer.valueOf(exd.uiCsv.tnbpts.getText()); //choix minPts
+			//System.out.println("min pts = "+MinPts);
+			MinPds = Integer.valueOf(exd.uiCsv.tpoids.getText()); //quantite des publications ou brevets dans un cluster
+			maxDistanceBetweenTwoPoints = Double.valueOf(exd.uiCsv.tray.getText()); //choix du seuil d'aloignement (pour le densite) R
+		}
 		MNumClust = new Vector<Integer>();// matrice associant a chaque identifiant de pole un numero de cluster
 		int numClust = 1;
 		
-		//on remplit MClust des identifiants des poles sur la premiere colonne et de zeros sur la seconde colonne
+		//MClust est rempli avec les  identifiants des points (id couple x,y) sur la premiere colonne et de zeros sur la deuxieme colonne
 		for (int k=0; k<v1; k++ )
 		{ 
 			MNumClust.add(0);
-	    }//fin for k
+	    }
 		System.out.println("Fin remplissage de numClust avec des zeros");
 
-	    for (int i=0; i<v1; i++ )// i represente un pole
+	    for (int i=0; i<v1; i++ )// i represente un pole (couple x,y)
 	    {
 		    if(exd.Coord.get(i).get(3)==0.0){
-		    	exd.Coord.get(i).set(3,1.0);//En indiquant que le pole est visite
+		    	exd.Coord.get(i).set(3,1.0);//dans la position 3 s indique si le pole est visite ou pas
 		    
-		    	Vector<Object> PtsVoisinsPoids = regionQuery(i, eps);
+		    	Vector<Object> PtsVoisinsPoids = regionQuery(i, maxDistanceBetweenTwoPoints);
 		    	Vector<Integer> PtsVoisins = (Vector<Integer>) PtsVoisinsPoids.get(0);
 		    	int poids_cluster = Integer.valueOf(PtsVoisinsPoids.get(1).toString());
-		    	//if(MinPts>0 && PtsVoisins.size()>MinPts && poids_cluster>=MinPds){
 		    	if(poids_cluster>=MinPds){//
-		    		expandCluster(i,PtsVoisins,numClust,eps,MinPts,MinPds);//fait appel a la methode pour trouver les voisins du cluster
+		    		expandCluster(i,PtsVoisins,numClust,maxDistanceBetweenTwoPoints,MinPts,MinPds);//fait appel a la methode pour trouver les voisins du cluster
 		    		numClust++;
 		    	}
 		    }
@@ -48,6 +57,7 @@ public class DBScan
 	/**
 	 * Methode pour calculer la distance entre deux coordonnees geographiques
 	 * 
+	 * @author Alba Fuga, Lucie Mourgues ENSG
 	 * @param lambdai 
 	 * @param phii 
 	 * @param lambdaj 
@@ -81,16 +91,24 @@ public class DBScan
 
 	    return r;
 	}
-	/*Trouve les points voisines d un point specifique, on fait lanlyse des voisins en obtenant le poids si le critere de distance minimale est remplie */
+	
+	/**
+	 * Fonction pour trouver les points voisines d un point specifique, on fait l anlyse des voisins en obtenant 
+	 * le poids si le critere de distance minimale est remplie
+	 * @param pole i (id de couple x,y)
+	 * @param eps est la distance maximale entre deux points definie dans les parametres 
+	 * @return liste avec les index des voisins
+	 * @author Michel Revollo
+	 */
 	public Vector<Object> regionQuery(int i,Double eps){
 		Vector<Integer> indexVoisins = new Vector<Integer>();
 		Vector<Object> indexVoisinsPoids= new Vector<Object>();
 		int poids = 0;
 		int poids_i=(int)(double)exd.Coord.get(i).get(4);
 		poids += poids_i;
-		for (int j=0; j<v1; j++) //boucle pour compter le nombre de voisins proches de i. j est un voisin de i.
+		for (int j=0; j<v1; j++) //il faut compter le nombre de voisins proches de i.
 		{
-			if(i!=j && MNumClust.get(j)==0){//excluir lui-meme
+			if(i!=j && MNumClust.get(j)==0){//excluire lui-meme
 				double lambdai = exd.Coord.get(i).get(1);
 				double lambdaj = exd.Coord.get(j).get(1);
 				double phii = exd.Coord.get(i).get(2);
@@ -98,18 +116,27 @@ public class DBScan
 				double distancePoints = DistancePts(lambdai, phii, lambdaj, phij);
 				int poids_j=(int)(double)exd.Coord.get(j).get(4);
 				
-				if (distancePoints <= eps  )//ici, en excluant la distance nulle, on considere que i n'est pas voisin de lui-meme. et si le point est visite
+				if (distancePoints <= eps  )		//en excluant la distance nulle, on considere que i n'est pas voisin de lui-meme. et si le point est visite
 				{
 					indexVoisins.add(j);
-					poids=poids_j+poids;//TODO quitar poids i modifier le poids, il faut additioner juste le poids_j + poids
+					poids=poids_j+poids; 			// on additione le poids j au poids calculee jusqu'au present
 				}
 			}
 		}
-		indexVoisinsPoids.add(indexVoisins);
+		indexVoisinsPoids.add(indexVoisins);		//ajout les voisins dans une liste pour chaque couple x,y
 		indexVoisinsPoids.add(poids);
 		return indexVoisinsPoids;
 	}
 	
+	/**
+	 * Methode pour ajouter les voisins de i dans le cluster numClust
+	 * @param i point a evaluer pour ajouter ses voisins
+	 * @param PtsVoisins Voisins de i
+	 * @param numClust le cluster auquel appartient i
+	 * @param eps distance maximale defini dans les parametres
+	 * @param MinPts Nombre minimal de points
+	 * @param MinPds Nombre minimal de poids acceptee pour creer le cluster
+	 */
 	public void expandCluster(int i,Vector<Integer>PtsVoisins,int numClust,double eps,int MinPts,int MinPds){
 		MNumClust.set(i,numClust);
 		//liste contient les index des voisins

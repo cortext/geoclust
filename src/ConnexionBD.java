@@ -1,15 +1,21 @@
-import java.sql.*; 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 import java.util.Properties;
 
 
 public class ConnexionBD
 {
  
-	public static Interface rui;
+	public static InterfaceBD rui;
 	public Connection conn;
 	public Statement stat; 
 	
-	public ConnexionBD(Interface ui) 
+	/**
+	 * Se connecter a la base de donnees
+	 * @param ui
+	 */
+	public ConnexionBD(InterfaceBD ui) 
 	{  
 		rui = ui;
 	
@@ -17,15 +23,11 @@ public class ConnexionBD
 		{	 
 			Class.forName("com.mysql.jdbc.Driver"); 
 			
-//			String server = "localhost:3307";
-//			String user = "t_revollom";
-//			String pw = "t14mich53";
-//			String bd = "t_michel";
 
-			String server = rui.uibd.tserver.getText();
-			String user = rui.uibd.tuser.getText();
-			String pw = rui.uibd.tpw.getText();
-			String bd = rui.uibd.tbd.getText();
+			String server = rui.tserver.getText();
+			String user = rui.tuser.getText();
+			String pw = rui.tpw.getText();
+			String bd = rui.tbd.getText();
 			
 			String url = "jdbc:mysql://"+ server +"/"+ bd;
 			Properties props = new Properties();
@@ -37,17 +39,6 @@ public class ConnexionBD
 
 			stat = conn.createStatement(); 
 			
-//			String query = "select Latitude from a01_03_longlatcouple_idc"; 
-//			
-//			ResultSet resultat =  stat.executeQuery(query); 
-//			
-//			
-//			while(resultat.next())
-//			{ 
-//				System.out.println(""+resultat.getDouble("Latitude")); 
-//			} 
-//			
-//		
 		} catch(Exception ex) 
 		{ 
 			System.out.println(ex.getMessage()); 

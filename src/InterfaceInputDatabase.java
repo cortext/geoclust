@@ -8,9 +8,9 @@ import java.sql.SQLException;
 import javax.swing.*;
 
 
-public class Interface extends JFrame
+public class InterfaceInputDatabase extends JFrame
 {
-	public Interface ui;
+	public InterfaceInputDatabase ui;
 	public static InterfaceBD uibd;
 	public ConnexionBD con;
 	public int adeb;
@@ -24,20 +24,20 @@ public class Interface extends JFrame
 	
 	JButton bouton2 = new JButton("Classifier");
 
-	JLabel label0 = new JLabel("Tables de la base de donn�es");
+	JLabel label0 = new JLabel("Paràmetres d'entrée");
 	JLabel label1 = new JLabel("Intervalle d'analyse");
 	public JLabel brevet = new JLabel("Table des brevets");
 	public JLabel publication = new JLabel("Table des publications");
-	public JLabel coord= new JLabel("Table des coordonn�es et identifiants");
+	public JLabel coord= new JLabel("Table des coordonnées et identifiants");
 	public JLabel output = new JLabel("Nom du fichier de sortie Clusters");
 	public JLabel output2 = new JLabel("Nom du fichier de sortie RI_RC");
-	public JLabel tdeb = new JLabel("Ann�e d�but");
-	public JLabel tfin = new JLabel("Ann�e fin (inclue)");
+	public JLabel tdeb = new JLabel("Année début");
+	public JLabel tfin = new JLabel("Année fin (inclue)");
 	public JLabel nbpts = new JLabel("Nb minimal de points dans 1 cluster");
-	public JLabel ray = new JLabel("Rayon maximal d'un cluster (en m�tres)");
+	public JLabel ray = new JLabel("Rayon maximal d'un cluster (en métres)");
 	public JLabel seuil1 = new JLabel("Seuil RI");
 	public JLabel seuil2 = new JLabel("Seuil RC");
-	public JLabel iter = new JLabel("Nombre d'it�rations de Chameleon");
+	public JLabel iter = new JLabel("Nombre d'itérations de Chameleon");
 	public JLabel poids = new JLabel("Min poids des points");
 		
 //	JRadioButton jr0 = new JRadioButton("Geographic  distance");
@@ -70,7 +70,7 @@ public class Interface extends JFrame
     JTextField titer = new JTextField();
     JTextField tpoids = new JTextField();
     
-	public Interface(InterfaceBD bd)
+	public InterfaceInputDatabase(InterfaceBD bd)
 	{
 		uibd = bd;
 		Color col = new Color(250, 250, 210);
@@ -158,9 +158,11 @@ public class Interface extends JFrame
                 
         GridLayout gl1 = new GridLayout (13, 3, 40, 15);       
         
-        pan1.setLayout(gl1);
+    	pan1.setLayout(gl1);
         pan1.add(defaut);      		pan1.add(param);      		pan1.add(checkbtn1);
+        
         pan1.add(label0);			pan1.add(label1);			pan1.add(seuil1);
+        
         pan1.add(brevet);			pan1.add(tdeb);				pan1.add(tseuil1);
         pan1.add(brev);				pan1.add(deb);				pan1.add(seuil2);
         pan1.add(publication);		pan1.add(tfin);				pan1.add(tseuil2);
@@ -178,9 +180,10 @@ public class Interface extends JFrame
         poids.setVisible(false);
         tpoids.setText("0");
         tpoids.setVisible(false);
-
+        
+        //con = new ConnexionBD(uibd);
+        //ImportCsvToDatabase.importCsvToDatabaseUsingLoad(ui, con);
 	}
-	
 	
 	public class Clust implements ActionListener 
 	{
@@ -189,11 +192,13 @@ public class Interface extends JFrame
 			afin = Integer.valueOf(fin.getText());
 			adeb = Integer.valueOf(deb.getText()); 
 			
-	    	con = new ConnexionBD(ui);
+			con = new ConnexionBD(uibd);
 	    	try 
 	    	{
 	    		temp_ini=System.currentTimeMillis();
-				ExtractionDonnees exd = new ExtractionDonnees(ui, con);
+	    		//ImportCsvToDatabase.importCsvToDatabaseUsingLoad(ui, con);// import des meta donnees
+				
+	    		ExtractionDonnees exd = new ExtractionDonnees(ui, con);
 				
 				DBScan dbs = new DBScan(exd);
 				EcritureResultats ecrituredbs = new EcritureResultats(dbs,false);
@@ -255,13 +260,14 @@ public class Interface extends JFrame
         
 	}
 	
-
+	
+	
 	class CheckBoxListener2 implements ActionListener
 	{	 
         public void actionPerformed(ActionEvent e) 
         {
         	if(checkbtn2.isSelected()){
-        		tpoids.setText("200");
+        		tpoids.setText("1500");
         		poids.setVisible(true);
         		tpoids.setVisible(true);
     		}
@@ -288,8 +294,8 @@ public class Interface extends JFrame
         		fin.setText("2010");
         		tnbpts.setText("5");
         		tray.setText("25000");
-        		tseuil1.setText("0.75");
-        		tseuil2.setText("10");
+        		tseuil1.setText("0.28");
+        		tseuil2.setText("0.32");
         		titer.setText("1");
         		jr4.setSelected(true);
         		tcoord.setText("a01_03_longlatcouple_idc_all_unic");
@@ -300,6 +306,6 @@ public class Interface extends JFrame
 	
 	 public static void main(String[] args)
 	 {       
-		 Interface fen = new Interface(uibd);   
+		 InterfaceInputDatabase fen = new InterfaceInputDatabase(uibd); 
 	 }
 }

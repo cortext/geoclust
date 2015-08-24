@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -19,19 +20,23 @@ public class InterfaceBD extends JFrame
 {
 	JPanel pan = new JPanel();
 	JPanel pan1 = new JPanel();
+	JPanel pan2 = new JPanel();
 	InterfaceBD ui;
 	
 	JButton bouton2 = new JButton("Connecter");
 
-	JLabel label0 = new JLabel("Param�tres de connexion");
+	JLabel label0 = new JLabel("Paramàtres de connexion");
 
 	public JLabel serveur = new JLabel("Serveur");
 	public JLabel user = new JLabel("Utilisateur");
 	public JLabel pw= new JLabel("Mot de passe");
-	public JLabel bd = new JLabel("Base de donn�es");
+	public JLabel bd = new JLabel("Base de données");
+	public JLabel input_type = new JLabel("Input type");
 	
     JRadioButton defaut = new JRadioButton("Defaut");
-    JRadioButton param = new JRadioButton("Parametrable");
+    
+    String[] petStrings = { "csv", "database"}; //liste pour le combobox 
+    JComboBox<String> comboBoxInputType = new JComboBox(petStrings); //combobox
  
     ButtonGroup bg1 = new ButtonGroup();
 
@@ -52,9 +57,10 @@ public class InterfaceBD extends JFrame
 
         pan.setBackground(col);
         pan1.setBackground(Color.getHSBColor(10, 10, 50));
+        
 
         defaut.addActionListener(new RadioDef());
-        param.addActionListener(new RadioDef());
+        comboBoxInputType.addActionListener(new RadioDef());
        
         Font f1 = new Font("Arial", Font.BOLD, 12);
         tuser.setFont(f1);
@@ -73,15 +79,24 @@ public class InterfaceBD extends JFrame
         bouton2.addActionListener(new Connect());
         
         bg1.add(defaut);
-        bg1.add(param);
-     
+        
+        /*------------------------Ajout de input type ---------------------------------*/
+        pan2.setBackground(Color.getHSBColor(10, 10, 50));// avoir le meme background
+        comboBoxInputType.setBackground(Color.getHSBColor(10, 10, 50));
+        
+        GridLayout gl2 = new GridLayout(1, 2); 
+        pan2.setLayout(gl2);
+        pan2.add(input_type);
+        pan2.add(comboBoxInputType);
+        /*--------------------------------------------------------------------------- */
+        
         defaut.setBackground(Color.getHSBColor(10, 10, 50));
-        param.setBackground(Color.getHSBColor(10, 10, 50));
+        
                 
         GridLayout gl1 = new GridLayout (7, 2, 40, 15);       
         
         pan1.setLayout(gl1);
-        pan1.add(defaut);      		pan1.add(param);      	
+        pan1.add(defaut);      		pan1.add(pan2);      	
         pan1.add(label0);			pan1.add(new JLabel(" "));			
         pan1.add(serveur);			pan1.add(pw);	
         pan1.add(tserver);			pan1.add(tpw);
@@ -112,7 +127,13 @@ public class InterfaceBD extends JFrame
 	{
 	    public void actionPerformed(ActionEvent e) 
 	    {
-			Interface interf = new Interface(ui);
+			if(ui.comboBoxInputType.getSelectedItem().toString().equals("csv")){
+				new InterfaceInputCsv(ui);
+				
+			}
+			else{
+				new InterfaceInputDatabase(ui);
+			}
 			ui.setVisible(false);
 	    }
 	}
@@ -123,5 +144,5 @@ public class InterfaceBD extends JFrame
 	 {       
 		 InterfaceBD fen = new InterfaceBD();   
 	 }
-
+	 
 }
