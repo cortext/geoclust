@@ -1,4 +1,6 @@
+import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.sql.*;
 
 import com.opencsv.CSVReader;
@@ -172,9 +174,9 @@ public class ImportCsvToDatabase {
 				  "IDc INT(11) NOT NULL," +
 				  "IdClusterDbScan INT(4) ) ";
 		
-		String loadQuery = "LOAD DATA LOCAL INFILE '" + path + "' " +
+		String loadQuery = "LOAD DATA LOCAL INFILE '" + path + "_DBScan.csv' " +
 					"INTO TABLE ww_clusterDbScan FIELDS TERMINATED BY ';'"
-				+ " LINES TERMINATED BY '\n' IGNORE 1 LINES ";
+				+ " LINES TERMINATED BY '\r\n' IGNORE 1 LINES ";
 		
 		String indexQueryLat= "ALTER TABLE ww_clusterDbScan ADD INDEX(IDc)";
 
@@ -194,9 +196,9 @@ public class ImportCsvToDatabase {
 		String dropTable = "DROP TABLE IF EXISTS ww_clusterChameleon";
 		String createTableQuery = "CREATE TABLE "+"ww_clusterChameleon"+" (" +
 				  "IDc INT(11) NOT NULL," +
-				  "IdClusterDbScan INT(4) ) ";
+				  "IdClusterCham INT(4) ) ";
 		
-		String loadQuery = "LOAD DATA LOCAL INFILE '" + path + "' " +
+		String loadQuery = "LOAD DATA LOCAL INFILE '" + path + ".csv' " +
 					"INTO TABLE ww_clusterChameleon FIELDS TERMINATED BY ';'"
 				+ " LINES TERMINATED BY '\n' IGNORE 1 LINES ";
 		
@@ -207,6 +209,58 @@ public class ImportCsvToDatabase {
 		con.stat.execute(loadQuery);//execute l insertion des donnees 
 		con.stat.execute(indexQueryLat);//ajout des index
 		
+	}
+	
+	protected static void produireResultatClustering(ConnexionBD con) throws SQLException{
+		String dropTable = "DROP TABLE IF EXISTS ww_resultatClustering";
+		String createTableQuery = "CREATE TABLE "+"ww_resultatClustering"+" (" +
+				  "IDc INT(11) NOT NULL," +
+				  "Latitude  decimal(10,7) DEFAULT NULL," +
+				  "Longitude  decimal(10,7) DEFAULT NULL," +
+				  "nbArticles INT(11)," +
+				  "IdClusterDbScan INT(4) , " +
+				  "IdClusterCham INT(4)," +
+				  "isFusion varchar(4) )";
+		
+		String insertQuery = "INSERT INTO ww_resultatClustering "+
+							"SELECT a.IDc,a.Latitude,a.Longitude,a.weight as nbArticles,"+
+							"b.IdClusterDbScan,c.IdClusterCham,"+
+							"IF(d.IdClusterCham IS NOT NULL,'Yes','No') as fusion "+
+							"FROM ww_pruebacoord a "+
+							"INNER JOIN ww_clusterdbscan b ON a.IDc=b.IDc "+
+							"INNER JOIN ww_clusterchameleon c ON b.IDc=c.IDc "+
+							"LEFT JOIN (SELECT a.IdClusterDbScan,b.IdClusterCham "+
+										"FROM ww_clusterdbscan a "+
+										"INNER JOIN ww_clusterchameleon b "+
+										"ON a.IDc=b.IDc "+
+										"WHERE a.IdClusterDbScan<>b.IdClusterCham "+
+										"GROUP by a.IdClusterDbScan,b.IdClusterCham) d  "+
+							"ON c.IdClusterCham=d.IdClusterCham " +
+							"GROUP BY a.IDc";
+
+		String indexQueryLat= "ALTER TABLE ww_resultatClustering ADD INDEX(IDc)";
+
+		con.stat.execute(dropTable);
+		con.stat.execute(createTableQuery);//creation de la table dans la bd
+		con.stat.execute(insertQuery);//execute l insertion des donnees 
+		con.stat.execute(indexQueryLat);//ajout des index
+		
+	}
+	
+	public static String getPathFromProject() {
+		File currentDirFile = new File("");
+		String helper = currentDirFile.getAbsolutePath().replace("\\", "/");
+		return helper;
+	}
+	
+	protected static void ecritureClustering(String path,ConnexionBD con) throws SQLException{
+		//produireResultatClustering(con);
+		getPathFromProject();
+		String exportClustering = "SELECT 'IDc','Lat','Long', 'NbArticles','IdClustDBScan'," +
+				"'IdClustCham', 'isFusion' " +
+									"UNION SELECT * INTO OUTFILE '"+getPathFromProject()+"/resultat_Clustfinal.csv' " +
+								  "FIELDS TERMINATED BY '\t' FROM ww_resultatClustering t";
+		con.stat.execute(exportClustering);
 	}
 	
 }

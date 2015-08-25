@@ -41,6 +41,7 @@ public class EcritureResultats {
     		fichierSortie.println((int)(double)dbs.exd.Coord.get(i).get(0)+";"+dbs.MNumClust.get(i).toString());
     	}
 		fichierSortie.close();
+		
 		System.out.println("Fin ecriture DBScan");
 	}
 	

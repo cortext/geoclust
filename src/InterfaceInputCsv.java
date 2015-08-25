@@ -201,7 +201,11 @@ public class InterfaceInputCsv extends JFrame
 					EcritureRIRC rirc= new EcritureRIRC(fc,iter); 
 				}
 				EcritureResultats er = new EcritureResultats(dbs,true);
-				
+				// On cree les tables avec les donnees concernant les resultats clustering dbscan et chameleon
+				String path=ui.jtfint3.getText();// textField output file 
+	    		ImportCsvToDatabase.ecritureDBScan(path, con);
+				ImportCsvToDatabase.ecritureChameleon(path, con);
+				ImportCsvToDatabase.ecritureClustering(path,con);
 				long temp_final=System.currentTimeMillis()-temp_ini;
 				
 				long heure = temp_final/3600000;
