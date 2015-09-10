@@ -116,7 +116,7 @@ public class InterfaceBD extends JFrame
         	{
         		tserver.setText("localhost");
         		tuser.setText("root");
-        		tpw.setText("michel");
+        		tpw.setText("****");
         		tbd.setText("test");
         	}
         }
