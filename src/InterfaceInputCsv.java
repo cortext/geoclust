@@ -173,7 +173,7 @@ public class InterfaceInputCsv extends JFrame
 	    	fileChooser.showOpenDialog(InterfaceInputCsv.this);
 	    	if(fileChooser.getSelectedFile()!=null){
 	    		System.out.println(fileChooser.getSelectedFile().getPath());
-	    		inputPathText.setText(fileChooser.getSelectedFile().getPath());
+	    		inputPathText.setText(fileChooser.getSelectedFile().getPath().replace('\\', '/'));
 	    	}
 	    }
 	}
@@ -181,8 +181,8 @@ public class InterfaceInputCsv extends JFrame
 	{
 	    public void actionPerformed(ActionEvent e) 
 	    {
-			afin = Integer.valueOf(fin.getText());
-			adeb = Integer.valueOf(deb.getText()); 
+	    	afin=(fin.getText().equals("")|| fin.getText()==null)?0:Integer.valueOf(fin.getText());
+			adeb = (deb.getText().equals("")|| deb.getText()==null)?0:Integer.valueOf(deb.getText()); 
 			
 			con = new ConnexionBD(uibd);
 	    	try 

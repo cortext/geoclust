@@ -76,7 +76,7 @@ public class ImportCsvToDatabase {
 		
 		String loadQuery = "LOAD DATA LOCAL INFILE '" + ui.inputPathText.getText() + "' " +
 					"INTO TABLE ww_inputs FIELDS TERMINATED BY '\t'"
-				+ " LINES TERMINATED BY '\n' (IDb,Year,Latitude, Longitude) ";
+				+ " LINES TERMINATED BY '\n' (IDb,Year,Latitude, Longitude)";
 		
 		String indexQueryLat= "ALTER TABLE ww_inputs ADD INDEX(Latitude)";
 		String indexQueryLong= "ALTER TABLE ww_inputs ADD INDEX(Longitude)";
@@ -188,6 +188,7 @@ public class ImportCsvToDatabase {
 	}
 	
 	/**
+	 * Creation de la table pour enregistrer les donnees de clustering provenants de 
 	 * @param path
 	 * @param con
 	 * @throws SQLException
@@ -212,8 +213,8 @@ public class ImportCsvToDatabase {
 	}
 	
 	protected static void produireResultatClustering(ConnexionBD con) throws SQLException{
-		String dropTable = "DROP TABLE IF EXISTS ww_resultatClustering";
-		String createTableQuery = "CREATE TABLE "+"ww_resultatClustering"+" (" +
+		String dropTable = "DROP TABLE IF EXISTS ww_resultatclustering";
+		String createTableQuery = "CREATE TABLE "+"ww_resultatclustering"+" (" +
 				  "IDc INT(11) NOT NULL," +
 				  "Latitude  decimal(10,7) DEFAULT NULL," +
 				  "Longitude  decimal(10,7) DEFAULT NULL," +
@@ -222,7 +223,7 @@ public class ImportCsvToDatabase {
 				  "IdClusterCham INT(4)," +
 				  "isFusion varchar(4) )";
 		
-		String insertQuery = "INSERT INTO ww_resultatClustering "+
+		String insertQuery = "INSERT INTO ww_resultatclustering "+
 							"SELECT a.IDc,a.Latitude,a.Longitude,a.weight as nbArticles,"+
 							"b.IdClusterDbScan,c.IdClusterCham,"+
 							"IF(d.IdClusterCham IS NOT NULL,'Yes','No') as fusion "+
@@ -238,7 +239,7 @@ public class ImportCsvToDatabase {
 							"ON c.IdClusterCham=d.IdClusterCham " +
 							"GROUP BY a.IDc";
 
-		String indexQueryLat= "ALTER TABLE ww_resultatClustering ADD INDEX(IDc)";
+		String indexQueryLat= "ALTER TABLE ww_resultatclustering ADD INDEX(IDc)";
 
 		con.stat.execute(dropTable);
 		con.stat.execute(createTableQuery);//creation de la table dans la bd
@@ -254,12 +255,12 @@ public class ImportCsvToDatabase {
 	}
 	
 	protected static void ecritureClustering(String path,ConnexionBD con) throws SQLException{
-		//produireResultatClustering(con);
+		produireResultatClustering(con);
 		getPathFromProject();
 		String exportClustering = "SELECT 'IDc','Lat','Long', 'NbArticles','IdClustDBScan'," +
 				"'IdClustCham', 'isFusion' " +
-									"UNION SELECT * INTO OUTFILE '"+getPathFromProject()+"/resultat_Clustfinal.csv' " +
-								  "FIELDS TERMINATED BY '\t' FROM ww_resultatClustering t";
+									"UNION SELECT * INTO OUTFILE '"+getPathFromProject()+"/resultat_Clustfinal2.csv' " +
+								  "FIELDS TERMINATED BY '\t' FROM ww_resultatclustering t";
 		con.stat.execute(exportClustering);
 	}
 	
