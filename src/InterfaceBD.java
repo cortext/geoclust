@@ -12,6 +12,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
@@ -23,14 +24,14 @@ public class InterfaceBD extends JFrame
 	JPanel pan2 = new JPanel();
 	InterfaceBD ui;
 	
-	JButton bouton2 = new JButton("Connecter");
+	JButton bouton2 = new JButton("Start");
 
 	JLabel label0 = new JLabel("Paramàtres de connexion");
 
-	public JLabel serveur = new JLabel("Serveur");
-	public JLabel user = new JLabel("Utilisateur");
-	public JLabel pw= new JLabel("Mot de passe");
-	public JLabel bd = new JLabel("Base de données");
+	public JLabel serveur = new JLabel("Database Server");
+	public JLabel user = new JLabel("Username");
+	public JLabel pw= new JLabel("Password");
+	public JLabel bd = new JLabel("Database Name");
 	public JLabel input_type = new JLabel("Input type");
 	
     JRadioButton defaut = new JRadioButton("Defaut");
@@ -42,7 +43,7 @@ public class InterfaceBD extends JFrame
 
     JTextField tserver = new JTextField();
     JTextField tuser = new JTextField();
-    JTextField tpw = new JTextField();
+    JPasswordField tpw = new JPasswordField();
     JTextField tbd = new JTextField();
     
 	public InterfaceBD()
@@ -116,7 +117,7 @@ public class InterfaceBD extends JFrame
         	{
         		tserver.setText("localhost");
         		tuser.setText("root");
-        		tpw.setText("****");
+        		tpw.setText("***");
         		tbd.setText("test");
         	}
         }
