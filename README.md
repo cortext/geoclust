@@ -10,7 +10,9 @@ The second step builds the final clusters by using the CHAMELEON method (Karypis
 2.	RC or Relative Closeness: does the final cluster will have a similar profile of collaborations than the two initial clusters taken separately (to avoid large variations of density of links in the final cluster)? 
 
 How to use
-Import the project into Eclipse, and add the jar libraries found into the folder external-libs
+* Import the project into Eclipse.
+* Add the jar libraries found into the folder external-libs.
+* Run the java class InterfaceBD. At this point the database should be installed on the machine the program will be used.
 
 Ester, M., Kriegel, H.-P., & Sander, J. (1996). A density-based algorithm for discovering clusters in large spatial databases with noise. In S. Evangelos, J. Han, & U. M. Fayyad (Eds.), 2nd International Conference on Knowledge Discovery and Data Mining (KDD-96) (pp. 226–231). AAAI Press.
 Karypis, G., Han, E.-H., & Kumar, V. (1999). Chameleon: Hierarchical clustering using dynamic modeling. IEEE Computer, 32(8), 68–75.
