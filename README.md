@@ -14,5 +14,15 @@ How to use
 * Add the jar libraries found into the folder external-libs.
 * Run the java class InterfaceBD. At this point the database should be installed on the machine the program will be used.
 
+CSV file format : 
+To use the csv file you must follow the next format :
+
+Article id, article year, latitude, longitude.
+
+Article id : a unic number to identify the article.
+Article year : If the article year does not exist or if you do not want tu use it you should introduce 0
+Latitude : this field is request. 
+Longitude : this field is request.
+
 Ester, M., Kriegel, H.-P., & Sander, J. (1996). A density-based algorithm for discovering clusters in large spatial databases with noise. In S. Evangelos, J. Han, & U. M. Fayyad (Eds.), 2nd International Conference on Knowledge Discovery and Data Mining (KDD-96) (pp. 226–231). AAAI Press.
 Karypis, G., Han, E.-H., & Kumar, V. (1999). Chameleon: Hierarchical clustering using dynamic modeling. IEEE Computer, 32(8), 68–75.
