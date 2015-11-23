@@ -24,5 +24,23 @@ Article year : If the article year does not exist or if you do not want tu use i
 Latitude : this field is request. 
 Longitude : this field is request.
 
+To query the final data and produce a table with all the relevant data you will need to work on your aoutside GeoClust, use thie query directly in your MySQL intance used : 
+```sql
+SELECT 
+    b.IDb,
+    a.IDc,
+    a.Latitude,
+    a.Longitude,
+    a.nbArticles,
+    a.IdClusterDbScan,
+    a.IdClusterCham,
+    a.isFusion
+FROM
+    geoclust.ww_resultatclustering AS a
+        INNER JOIN
+    ww_pruebadata AS b ON a.IDc = b.IDc;
+```
+
+
 Ester, M., Kriegel, H.-P., & Sander, J. (1996). A density-based algorithm for discovering clusters in large spatial databases with noise. In S. Evangelos, J. Han, & U. M. Fayyad (Eds.), 2nd International Conference on Knowledge Discovery and Data Mining (KDD-96) (pp. 226–231). AAAI Press.
 Karypis, G., Han, E.-H., & Kumar, V. (1999). Chameleon: Hierarchical clustering using dynamic modeling. IEEE Computer, 32(8), 68–75.
