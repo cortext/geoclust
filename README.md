@@ -15,9 +15,9 @@ The second step builds the final clusters by using the CHAMELEON method (Karypis
 
 ##  Input CSV file format
 To use the csv file you must follow the next format : Article id, article year, latitude, longitude.
-* Article id : a unic number to identify the article.
-* Article year : if the a temporal (year) information does not exist or if you do not want tu use it, you should fill-in this column by 0
-* Latitude : this field is request.
+* IDb : a unic number to identify the articles (repeated if there are some relations inside articles);
+* Year : if the a temporal (year) information does not exist or if you do not want tu use it, you should fill-in this column by 0;
+* Latitude : this field is request;
 * Longitude : this field is request.
 
 ##  Export the results from MySQL server
