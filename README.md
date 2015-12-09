@@ -13,7 +13,7 @@ The second step builds the final clusters by using the CHAMELEON method (Karypis
 * Add the jar libraries found into the folder external-libs.
 * Run the java class InterfaceBD. At this point the database should be installed on the machine the program will be used.
 
-##  CSV file format : 
+##  CSV file format
 To use the csv file you must follow the next format : Article id, article year, latitude, longitude.
 * Article id : a unic number to identify the article.
 * Article year : If the article year does not exist or if you do not want tu use it you should introduce 0
