@@ -48,7 +48,6 @@ FROM
         INNER JOIN
     geoclust.ww_pruebadata AS b ON a.IDc = b.IDc;
 ```
-Where IDb is the id of the documents, IDc is the id of each latitude-longitude couples, N
 
 ##  More information on the algorithms
 Ester, M., Kriegel, H.-P., & Sander, J. (1996). *A density-based algorithm for discovering clusters in large spatial databases with noise.* In S. Evangelos, J. Han, & U. M. Fayyad (Eds.), 2nd International Conference on Knowledge Discovery and Data Mining (KDD-96) (pp. 226–231). AAAI Press.  
