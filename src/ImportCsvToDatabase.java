@@ -2,6 +2,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import com.opencsv.CSVReader;
 
@@ -257,9 +260,12 @@ public class ImportCsvToDatabase {
 	protected static void ecritureClustering(String path,ConnexionBD con) throws SQLException{
 		produireResultatClustering(con);
 		getPathFromProject();
+		DateFormat format = new SimpleDateFormat("yyyy_MM_dd_HH_mm");
+		String s = (format.format(new Date())); // cast le dateformat en string
+		
 		String exportClustering = "SELECT 'IDc','Lat','Long', 'NbArticles','IdClustDBScan'," +
 				"'IdClustCham', 'isFusion' " +
-									"UNION SELECT * INTO OUTFILE '"+getPathFromProject()+"/resultat_Clustfinal2.csv' " +
+									"UNION SELECT * INTO OUTFILE '"+getPathFromProject()+"/"+s+"resultat_Clustfinal.csv' " +
 								  "FIELDS TERMINATED BY '\t' FROM ww_resultatclustering t";
 		con.stat.execute(exportClustering);
 	}
