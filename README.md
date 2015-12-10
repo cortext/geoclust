@@ -54,9 +54,9 @@ FROM
 
 ##  Examples of outputs and performace
 All the results files are stored in the example folder. The parameters used are: 25km with a minimum of 150 for the weight of the longitude-latitude couples, and 0.28 for RI and 0.32 for RC.
-
-For around 15 000 relations between coordinates with 6 000 distinct weighted coordinate couples, it takes around 8 minutes (2.4GH processor and 8 GO RAM). 
-
+On a computer with a 2.4GH processor (i7) and 8 GO RAM, with tow rounds of merging (chameleon):
+* it takes around 8 minutes for around 15 000 relations between coordinates with 6 000 distinct weighted coordinate couples. 
+* it takes around 30 minutes for around 30 000 relations between coordinates with 18 000 distinct weighted coordinate couples. 
 
 ##  More information on the algorithms
 Ester, M., Kriegel, H.-P., & Sander, J. (1996). *A density-based algorithm for discovering clusters in large spatial databases with noise.* In S. Evangelos, J. Han, & U. M. Fayyad (Eds.), 2nd International Conference on Knowledge Discovery and Data Mining (KDD-96) (pp. 226–231). AAAI Press.  
