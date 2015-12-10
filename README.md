@@ -54,6 +54,7 @@ FROM
 
 ##  Examples of outputs and performace
 All the results files are stored in the example folder. The parameters used are: 25km with a minimum of 150 for the weight of the longitude-latitude couples, and 0.28 for RI and 0.32 for RC.
+
 On a computer with a 2.4GH processor (i7) and 8 GO RAM, with tow rounds of merging (chameleon):
 * it takes around 8 minutes for around 15 000 relations between coordinates with 6 000 distinct weighted coordinate couples. 
 * it takes around 30 minutes for around 30 000 relations between coordinates with 18 000 distinct weighted coordinate couples. 
