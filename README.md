@@ -9,9 +9,10 @@ The second step builds the final clusters by using the CHAMELEON method (Karypis
 2.	RC or Relative Closeness: does the final cluster will have a similar profile of collaborations than the two initial clusters taken separately (to avoid large variations of density of links in the final cluster)? 
 
 ##  How to use
-* Import the project into Eclipse.
-* Add the jar libraries found into the folder external-libs.
-* Run the java class InterfaceBD. At this point the database should be installed on the machine the program will be used.
+* Import the project into Eclipse;
+* Add the jar libraries found into the folder external-libs;
+* Be sure you created a MySQL database, and that the MySQL server is running; 
+* Run the java class InterfaceBD.
 
 ##  Input CSV file format
 The input csv file should be tab separated with a \n at the end of the lines. Have a look in the Examples folder to see more.
@@ -23,7 +24,7 @@ To use the csv file you must follow the next format : Article id, article year, 
 * Longitude : this field is request.
 
 ##  Export the results from MySQL server
-To query the final data and produce a table with all the relevant information you will need to work outside GeoClust. Use one of these queries directly in your MySQL instance used : 
+The GeoClust software creates some useful files to understand the geographical clusters produced. See the example folder. But if you want to directly link the ID of your documents and the results you can query the final data and produce a table with all the relevant information you will need to work outside GeoClust. Use one of these queries directly in your MySQL instance : 
 ```sql
 -- All information for clusters with a weight for each latitude-longitude couples
 SELECT 
