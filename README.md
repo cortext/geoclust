@@ -24,7 +24,7 @@ To use the csv file you must follow the next format : Article id, article year, 
 * Longitude : this field is request.
 
 ##  Export the results from MySQL server
-The GeoClust software creates some useful files to understand the geographical clusters produced. See the example folder. But if you want to directly link the ID of your documents and the results you can query the final data and produce a table with all the relevant information you will need to work outside GeoClust. Use one of these queries directly in your MySQL instance : 
+The GeoClust software creates some useful files to understand the geographical clusters produced. See the example folder. But if you want to directly link the ID of your documents and the results you can query the final data and produce a table with all the relevant information you will need to work outside GeoClust. Use one of these queries directly in your MySQL instance: 
 ```sql
 -- All information for clusters with a weight for each latitude-longitude couples
 SELECT 
