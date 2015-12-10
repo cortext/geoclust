@@ -265,7 +265,7 @@ public class ImportCsvToDatabase {
 		
 		String exportClustering = "SELECT 'IDc','Lat','Long', 'NbArticles','IdClustDBScan'," +
 				"'IdClustCham', 'isFusion' " +
-									"UNION SELECT * INTO OUTFILE '"+getPathFromProject()+"/"+s+"resultat_Clustfinal.csv' " +
+									"UNION SELECT * INTO OUTFILE '"+getPathFromProject()+"/"+s+"_resultat_Clustfinal.csv' " +
 								  "FIELDS TERMINATED BY '\t' FROM ww_resultatclustering t";
 		con.stat.execute(exportClustering);
 	}
