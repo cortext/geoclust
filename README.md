@@ -14,7 +14,7 @@ The second step builds the final clusters by using the CHAMELEON method (Karypis
 * Run the java class InterfaceBD. At this point the database should be installed on the machine the program will be used.
 
 ##  Input CSV file format
-The input csv file 
+The input csv file should be tab separated with a \n for the end of the lines. Have a look in the Examples folder to see more.
 To use the csv file you must follow the next format : Article id, article year, latitude, longitude.
 * IDb : a unic number to identify the articles (repeated if there are some relations inside articles);
 * Year : if the a temporal (year) information does not exist or if you do not want tu use it, you should fill-in this column by 0;
@@ -51,7 +51,8 @@ FROM
 ```
 
 ##  Examples of outputs and performace
-The 
+All the results files are stored in the example folder. The parameters used are: 25km with a minimum of 150 for the weight of the longitude-latitude couples, and 0.28 for RI and 0.32 for RC. 
+For around 15 000 relations between coordinates with 6 000 distinct weighted coordinate couples, it takes around 8 minutes (2.4GH processor and 8 GO RAM). 
 
 
 ##  More information on the algorithms
