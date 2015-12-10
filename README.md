@@ -14,6 +14,7 @@ The second step builds the final clusters by using the CHAMELEON method (Karypis
 * Run the java class InterfaceBD. At this point the database should be installed on the machine the program will be used.
 
 ##  Input CSV file format
+The input csv file 
 To use the csv file you must follow the next format : Article id, article year, latitude, longitude.
 * IDb : a unic number to identify the articles (repeated if there are some relations inside articles);
 * Year : if the a temporal (year) information does not exist or if you do not want tu use it, you should fill-in this column by 0;
@@ -48,6 +49,10 @@ FROM
         INNER JOIN
     geoclust.ww_pruebadata AS b ON a.IDc = b.IDc;
 ```
+
+##  Examples of outputs and performace
+The 
+
 
 ##  More information on the algorithms
 Ester, M., Kriegel, H.-P., & Sander, J. (1996). *A density-based algorithm for discovering clusters in large spatial databases with noise.* In S. Evangelos, J. Han, & U. M. Fayyad (Eds.), 2nd International Conference on Knowledge Discovery and Data Mining (KDD-96) (pp. 226–231). AAAI Press.  
