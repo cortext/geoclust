@@ -67,7 +67,7 @@ public class ExtractionDonnees
 			String query1 = "SELECT "+ui.pub.getText()+".IDc,"+ui.pub.getText()+".IDp,"+ui.tcoord.getText()+".IDc, "+ui.tcoord.getText()+".Latitude,"+ui.tcoord.getText()+".Longitude," + "COUNT("+ui.pub.getText()+".IDp) AS quantite "+
 					        "FROM "+ui.tcoord.getText()+", "+ui.pub.getText()+" " +
 							"WHERE " +ui.pub.getText()+".Year >= "+ ui.adeb+ " AND "+ui.pub.getText()+".Year<= " +ui.afin+" AND "+ui.pub.getText()+".IDc = "+ui.tcoord.getText()+".IDc " +
-							"AND "+ ui.pub.getText()+".IDp NOT IN (SELECT document_id FROM block_publications_non_nano) " +
+							//"AND "+ ui.pub.getText()+".IDp NOT IN (SELECT document_id FROM block_publications_non_nano) " +
 							"AND "+ui.tcoord.getText()+".Latitude <> 0 AND "+ ui.tcoord.getText()+".Longitude <> 0 "+
 							"GROUP BY "+ui.tcoord.getText()+".IDc, "+ui.tcoord.getText()+".Latitude,"+ui.tcoord.getText()+".Longitude;";
 
