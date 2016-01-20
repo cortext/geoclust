@@ -217,8 +217,11 @@ public class FiltresChameleon
 			//on valide que si le denominateur est 0 il faut mettre 0.0 a la place de NaN;
 			double closnessIntraCluster1= (nbCollabIntraCluster1/nbEdgeIntraCluster1 == Double.NaN ? 0.0 : nbCollabIntraCluster1/nbEdgeIntraCluster1) ;
 			
+			System.out.println("Nombre de clusters traites : "+i); // affiche l'avancement des comparaisons rirc
+			
 			for(int j = cluster_visite; j<Clusters.size(); j++)
 			{
+				
 				double distance=dbs.DistancePts(listeBarycentreParCluster.get(i).get(1), listeBarycentreParCluster.get(i).get(2), listeBarycentreParCluster.get(j).get(1), listeBarycentreParCluster.get(j).get(2))/1000;
 				
 				if(i!=j && distance<100){//distance maximale pour fusioner les clusters
